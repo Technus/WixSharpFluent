@@ -66,7 +66,7 @@ namespace WixSharp.Fluent.Extensions
             if(mode!=null && mode.Length>0)
             {
                 var reinstallMode = mode[0];
-                for (int i = 0; i < mode.Length; i++)
+                for (int i = 1; i < mode.Length; i++)
                 {
                     reinstallMode += mode[i];
                 }
