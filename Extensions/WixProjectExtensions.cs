@@ -177,8 +177,10 @@ namespace WixSharp.Fluent.Extensions
         /// <param name="upgradeCode"></param>
         /// <param name="upgradeVersions">upgrade version definitions</param>
         /// <returns></returns>
-        public static ProjectT AddUpgrade<ProjectT>(this ProjectT project, Guid upgradeCode, params UpgradeVersion[] upgradeVersions) where ProjectT : Project
+        public static ProjectT AddUpgrade<ProjectT>(this ProjectT project, Guid? upgradeCode=null, bool noThrow = false, DLL assembly = null, params UpgradeVersion[] upgradeVersions) where ProjectT : Project
         {
+            upgradeCode = upgradeCode ?? project.UpgradeCode ?? project.SetIdentifiers(noThrow: noThrow, assembly: assembly).UpgradeCode;
+
             StringBuilder xml = new StringBuilder();
 
             xml.Append($"<Upgrade Id=\"{upgradeCode}\">");
