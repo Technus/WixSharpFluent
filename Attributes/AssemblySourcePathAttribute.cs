@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace WixSharp.Fluent.Attributes
 {
+    /// <summary>
+    /// Sets the path to content
+    /// </summary>
     [AttributeUsage(AttributeTargets.Assembly)]
     public class AssemblySourcePathAttribute : Attribute
     {

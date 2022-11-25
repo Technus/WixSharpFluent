@@ -1,11 +1,20 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+ 
+
   <PropertyGroup>
 	  <TargetFramework>net48</TargetFramework>
 	  <OutputType>Library</OutputType>
 	  <IsPackable>true</IsPackable>
 	  <RootNamespace>WixSharp.Fluent</RootNamespace>
+	  <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+	  <GenerateDocumentationFile>true</GenerateDocumentationFile>
 	  <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+	  <EmbedUntrackedSources>true</EmbedUntrackedSources>
+	  <EmbedAllSources>true</EmbedAllSources>
+	  <IncludeSymbols>true</IncludeSymbols>
+	  <DebugType>Embedded</DebugType>
+	  <DebugSymbols>true</DebugSymbols>
 	  <Title>WixSharp Fluent Code Library</Title>
 	  <PackageIcon>Neith_spacepedia.png</PackageIcon>
 	  <PackageTags>WixSharp;WixSharpFluent;WixSharp Fluent;Fluent;</PackageTags>

@@ -19,13 +19,15 @@ namespace WixSharp.Fluent.Extensions
 
         /// <summary>
         /// Calls:
-        /// <see cref="WixCommonExtensions.SetWixDefaults{WixProjectT}(WixProjectT, DLL)"/>
+        /// <see cref="WixCommonExtensions.SetWixDefaults{WixProjectT}(WixProjectT, bool, DLL)"/>
         /// Also:
         ///  * Sets <see cref="MediaTemplate.EmbedCab"/> and clears the <see cref="Project.Media"/>
         ///  * And <see cref="InstallScope.perMachine"/>
         /// </summary>
         /// <typeparam name="ProjectT"></typeparam>
         /// <param name="project"></param>
+        /// <param name="noThrow"></param>
+        /// <param name="assembly"></param>
         /// <returns></returns>
         public static ProjectT SetDefaults<ProjectT>(this ProjectT project,bool noThrow = false, DLL assembly = null) where ProjectT : Project
         {
@@ -38,6 +40,12 @@ namespace WixSharp.Fluent.Extensions
             return project;
         }
 
+        /// <summary>
+        /// Sets Media template to EmbedCab
+        /// </summary>
+        /// <typeparam name="ProjectT"></typeparam>
+        /// <param name="project"></param>
+        /// <returns></returns>
         public static ProjectT SetMediaTemplate<ProjectT>(this ProjectT project) where ProjectT : Project
         {
             project.Add(new MediaTemplate()
@@ -48,6 +56,13 @@ namespace WixSharp.Fluent.Extensions
             return project;
         }
 
+        /// <summary>
+        /// Sets install scope of the installer
+        /// </summary>
+        /// <typeparam name="ProjectT"></typeparam>
+        /// <param name="project"></param>
+        /// <param name="installScope">By default <see cref="InstallScope.perMachine"/></param>
+        /// <returns></returns>
         public static ProjectT SetInstallScope<ProjectT>(this ProjectT project, InstallScope? installScope = null) where ProjectT : Project
         {
             project.InstallScope = installScope ?? InstallScope.perMachine;
@@ -83,6 +98,7 @@ namespace WixSharp.Fluent.Extensions
         /// <param name="upgradeCode">Upgrade code to use, if not specified will look into assembly</param>
         /// <param name="id">The GUID used to make the package id by default will equal to upgradeCode, to enable consisten ProductID generation set : <see cref="Project.EmitConsistentPackageId"/> </param>
         /// <param name="version">Provide version here if it was not set before</param>
+        /// <param name="noThrow"></param>
         /// <param name="assembly">The assembly from which the upgrade code is to be extracted, if not specified use the caller assembly</param>
         /// <returns></returns>
         /// <exception cref="ArgumentException">When version was not set before</exception>
@@ -130,6 +146,8 @@ namespace WixSharp.Fluent.Extensions
         /// <typeparam name="ProjectT"></typeparam>
         /// <param name="project"></param>
         /// <param name="iconPath">path to icon</param>
+        /// <param name="noThrow"></param>
+        /// <param name="assembly"></param>
         /// <returns></returns>
         public static ProjectT SetIconPath<ProjectT>(this ProjectT project, string iconPath=null, bool noThrow = false, DLL assembly=null) where ProjectT : Project
         {
@@ -175,6 +193,8 @@ namespace WixSharp.Fluent.Extensions
         /// <typeparam name="ProjectT"></typeparam>
         /// <param name="project"></param>
         /// <param name="upgradeCode"></param>
+        /// <param name="noThrow"></param>
+        /// <param name="assembly"></param>
         /// <param name="upgradeVersions">upgrade version definitions</param>
         /// <returns></returns>
         public static ProjectT AddUpgrade<ProjectT>(this ProjectT project, Guid? upgradeCode=null, bool noThrow = false, DLL assembly = null, params UpgradeVersion[] upgradeVersions) where ProjectT : Project

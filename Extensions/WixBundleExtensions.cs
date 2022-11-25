@@ -17,10 +17,11 @@ namespace WixSharp.Fluent.Extensions
 
         /// <summary>
         /// Calls:
-        /// <see cref="WixCommonExtensions.SetWixDefaults{WixProjectT}(WixProjectT, DLL)"/>
+        /// <see cref="WixCommonExtensions.SetWixDefaults{WixProjectT}(WixProjectT, bool, DLL)"/>
         /// </summary>
         /// <typeparam name="BundleT"></typeparam>
         /// <param name="bundle"></param>
+        /// <param name="noThrow"></param>
         /// <param name="assembly"></param>
         /// <returns></returns>
         public static BundleT SetDefaults<BundleT>(this BundleT bundle, bool noThrow = false, DLL assembly = null) where BundleT : Bundle
@@ -39,6 +40,8 @@ namespace WixSharp.Fluent.Extensions
         /// <typeparam name="BundleT"></typeparam>
         /// <param name="bundle"></param>
         /// <param name="project"></param>
+        /// <param name="noThrow"></param>
+        /// <param name="assembly"></param>
         /// <returns></returns>
         public static BundleT SetFromProject<BundleT>(this BundleT bundle, Project project, bool noThrow = false, DLL assembly = null) where BundleT : Bundle
         {
@@ -66,6 +69,15 @@ namespace WixSharp.Fluent.Extensions
             return bundle;
         }
 
+        /// <summary>
+        /// Sets the icon path
+        /// </summary>
+        /// <typeparam name="BundleT"></typeparam>
+        /// <param name="bundle"></param>
+        /// <param name="iconPath"></param>
+        /// <param name="noThrow"></param>
+        /// <param name="assembly"></param>
+        /// <returns></returns>
         public static BundleT SetIconPath<BundleT>(this BundleT bundle, string iconPath = null, bool noThrow = false, DLL assembly = null) where BundleT : Bundle
         {
             bundle.IconFile = iconPath ?? WixCommonExtensions.GetAssemblyAttribute<AssemblyIconPathAttribute>(noThrow, assembly)?.Path;
@@ -78,6 +90,7 @@ namespace WixSharp.Fluent.Extensions
         /// <typeparam name="BundleT"></typeparam>
         /// <param name="bundle"></param>
         /// <param name="upgradeCode">Upgrade code to use, if not specified will look into assembly</param>
+        /// <param name="noThrow"></param>
         /// <param name="assembly">The assembly from which the upgrade code is to be extracted, if not specified use the caller assembly</param>
         /// <returns></returns>
         public static BundleT SetIdentifiers<BundleT>(this BundleT bundle, Guid? upgradeCode = null, bool noThrow = false, DLL assembly = null) where BundleT : Bundle
@@ -95,6 +108,7 @@ namespace WixSharp.Fluent.Extensions
         /// <typeparam name="BundleT"></typeparam>
         /// <param name="bundle"></param>
         /// <param name="bootstrapper"></param>
+        /// <param name="noThrow"></param>
         /// <param name="assembly"></param>
         /// <returns></returns>
         public static BundleT SetApplication<BundleT>(this BundleT bundle, WixStandardBootstrapperApplication bootstrapper = null, bool noThrow = false, DLL assembly = null) where BundleT : Bundle
@@ -342,6 +356,8 @@ namespace WixSharp.Fluent.Extensions
         /// <typeparam name="BundleT"></typeparam>
         /// <param name="bundle"></param>
         /// <param name="pathInsideProgramFilesFolder"></param>
+        /// <param name="noThrow"></param>
+        /// <param name="assembly"></param>
         /// <returns></returns>
         public static BundleT AddInstallFolderVariable<BundleT>(this BundleT bundle, string pathInsideProgramFilesFolder=null, bool noThrow = false, DLL assembly = null) where BundleT : Bundle
         {
