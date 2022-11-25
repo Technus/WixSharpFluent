@@ -7,8 +7,9 @@ namespace WixSharp.Fluent.XML
     /// <summary>
     /// Fixes the issue where License is shown in the installer instead of just a hyperlink.
     /// </summary>
-    internal class HyperlinkLicenseBootstraperApplication : WixStandardBootstrapperApplication
+    public class HyperlinkLicenseBootstraperApplication : WixStandardBootstrapperApplication
     {
+        /// <inheritdoc/>
         public override XContainer[] ToXml()
         {
             XNamespace bal = Compiler.IsWix4 ?
