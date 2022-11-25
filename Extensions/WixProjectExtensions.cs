@@ -5,6 +5,7 @@ using WixSharp.Fluent.XML;
 using WixSharp;
 using WixSharp.CommonTasks;
 using DLL = System.Reflection.Assembly;
+using static WixSharp.Fluent.Extensions.AssemblyAttributeExtensions;
 
 namespace WixSharp.Fluent.Extensions
 {
@@ -106,7 +107,7 @@ namespace WixSharp.Fluent.Extensions
         {
             project.UpgradeCode = 
                 upgradeCode ?? 
-                WixCommonExtensions.GetAssemblyAttribute<AssemblyProjectUpgradeCodeAttribute>(noThrow, assembly)?.UpgradeCodeGuid ??
+                GetAssemblyAttribute<AssemblyProjectUpgradeCodeAttribute>(noThrow, assembly)?.UpgradeCodeGuid ??
                 project.UpgradeCode;
             project.GUID = id ?? project.UpgradeCode ?? project.GUID;
 
@@ -151,7 +152,7 @@ namespace WixSharp.Fluent.Extensions
         /// <returns></returns>
         public static ProjectT SetIconPath<ProjectT>(this ProjectT project, string iconPath=null, bool noThrow = false, DLL assembly=null) where ProjectT : Project
         {
-            iconPath = iconPath ?? WixCommonExtensions.GetAssemblyAttribute<AssemblyIconPathAttribute>(noThrow,assembly)?.Path;
+            iconPath = iconPath ?? GetAssemblyAttribute<AssemblyIconPathAttribute>(noThrow,assembly)?.Path;
             if(iconPath != null)
                 project.Properties = project.Properties.Combine(new Property(iconPropName, iconPath));
             return project;

@@ -4,6 +4,7 @@ using WixSharp.Bootstrapper;
 using System.IO;
 using DLL = System.Reflection.Assembly;
 using WixSharp.Fluent.Attributes;
+using static WixSharp.Fluent.Extensions.AssemblyAttributeExtensions;
 
 namespace WixSharp.Fluent.Extensions
 {
@@ -80,7 +81,7 @@ namespace WixSharp.Fluent.Extensions
         /// <returns></returns>
         public static BundleT SetIconPath<BundleT>(this BundleT bundle, string iconPath = null, bool noThrow = false, DLL assembly = null) where BundleT : Bundle
         {
-            bundle.IconFile = iconPath ?? WixCommonExtensions.GetAssemblyAttribute<AssemblyIconPathAttribute>(noThrow, assembly)?.Path;
+            bundle.IconFile = iconPath ?? GetAssemblyAttribute<AssemblyIconPathAttribute>(noThrow, assembly)?.Path;
             return bundle;
         }
 
@@ -97,7 +98,7 @@ namespace WixSharp.Fluent.Extensions
         {
             bundle.UpgradeCode = 
                 upgradeCode ??
-                WixCommonExtensions.GetAssemblyAttribute<AssemblyBundleUpgradeCodeAttribute>(noThrow, assembly)?.UpgradeCodeGuid ?? 
+                GetAssemblyAttribute<AssemblyBundleUpgradeCodeAttribute>(noThrow, assembly)?.UpgradeCodeGuid ?? 
                 bundle.UpgradeCode;
             return bundle;
         }
@@ -115,7 +116,7 @@ namespace WixSharp.Fluent.Extensions
         {
             bundle.Application =
                 bootstrapper ??
-                WixCommonExtensions.GetAssemblyAttribute<AssemblyBootstrapperAttribute>(noThrow, assembly)?.Bootstrapper ??
+                GetAssemblyAttribute<AssemblyBootstrapperAttribute>(noThrow, assembly)?.Bootstrapper ??
                 bundle.Application;
             return bundle;
         }
@@ -361,7 +362,7 @@ namespace WixSharp.Fluent.Extensions
         /// <returns></returns>
         public static BundleT AddInstallFolderVariable<BundleT>(this BundleT bundle, string pathInsideProgramFilesFolder=null, bool noThrow = false, DLL assembly = null) where BundleT : Bundle
         {
-            pathInsideProgramFilesFolder = pathInsideProgramFilesFolder ?? $@"{WixCommonExtensions.GetInstallationPath(noThrow,assembly)}\";
+            pathInsideProgramFilesFolder = pathInsideProgramFilesFolder ?? $@"{GetInstallationPath(noThrow,assembly)}\";
             if(pathInsideProgramFilesFolder!=null)
             {
                 var installFolder = new Variable("InstallFolder", $"[ProgramFilesFolder]{pathInsideProgramFilesFolder}");//The Wix variable ends with slash anyway
