@@ -157,15 +157,5 @@ namespace WixSharp.Fluent.Extensions
             return project;
         }
 
-        /// <summary>
-        /// Gets The ConstantDefines from MSBuildScript
-        /// </summary>
-        /// <param name="noThrow"></param>
-        /// <param name="assembly"></param>
-        /// <returns></returns>
-        public static AssemblyDefinesAttribute GetDefines(bool noThrow = false, DLL assembly = null)
-        {
-            return GetAssemblyAttribute<AssemblyDefinesAttribute>(noThrow, assembly);
-        }
     }
 }
