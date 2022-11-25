@@ -30,7 +30,7 @@ namespace WixSharp.Fluent.Extensions
         /// <param name="noThrow"></param>
         /// <param name="assembly"></param>
         /// <returns></returns>
-        public static ProjectT SetDefaults<ProjectT>(this ProjectT project,bool noThrow = false, DLL assembly = null) where ProjectT : Project
+        public static ProjectT SetDefaults<ProjectT>(this ProjectT project,bool noThrow = true, DLL assembly = null) where ProjectT : Project
         {
             project.SetWixDefaults(noThrow: noThrow, assembly: assembly);
             project.SetIdentifiers(noThrow: noThrow, assembly: assembly);

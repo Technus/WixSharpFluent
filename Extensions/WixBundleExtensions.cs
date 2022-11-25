@@ -25,7 +25,7 @@ namespace WixSharp.Fluent.Extensions
         /// <param name="noThrow"></param>
         /// <param name="assembly"></param>
         /// <returns></returns>
-        public static BundleT SetDefaults<BundleT>(this BundleT bundle, bool noThrow = false, DLL assembly = null) where BundleT : Bundle
+        public static BundleT SetDefaults<BundleT>(this BundleT bundle, bool noThrow = true, DLL assembly = null) where BundleT : Bundle
         {
             bundle.SetWixDefaults(noThrow: noThrow, assembly: assembly);
             bundle.SetIdentifiers(noThrow: noThrow, assembly: assembly);
