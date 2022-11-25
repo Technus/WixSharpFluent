@@ -61,7 +61,7 @@ namespace WixSharp.Fluent.Extensions
 
             var guid = guidMap.ContainsKey(str) ? guidMap[str] : GuidGenerators.Default(obj);
 
-            Console.WriteLine($"GEN: {obj} as {str} to {guid}");
+            //Console.WriteLine($"GEN: {obj} as {str} to {guid}");
 
             return guid;
         }
