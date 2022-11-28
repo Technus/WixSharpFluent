@@ -1,10 +1,12 @@
 ﻿using System;
+using System.IO;
 using System.Runtime.InteropServices;
 
 namespace WixSharp.Fluent.Redistributables
 {
     internal static class DownloadsFolder
     {
+#if PLACE_IN_DOWNLOADS
         private static Guid folderDownloads = new Guid("374DE290-123F-4565-9164-39C4925E467B");
 
         [DllImport("shell32.dll", CharSet = CharSet.Auto)]
@@ -31,6 +33,13 @@ namespace WixSharp.Fluent.Redistributables
                 Marshal.FreeCoTaskMem(pathPtr);
             }
         }
+#else
+        static DownloadsFolder()
+        {
+            DownloadsPath = Environment.ExpandEnvironmentVariables(@"%USERPROFILE%\.WixSharp.Fluent\Redistributables\Cache");
+            Directory.CreateDirectory(DownloadsPath);
+        }
+#endif
 
         internal static string DownloadsPath { get; private set; }
     }
