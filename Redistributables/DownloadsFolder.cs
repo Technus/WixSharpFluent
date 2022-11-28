@@ -6,7 +6,7 @@ namespace WixSharp.Fluent.Redistributables
 {
     internal static class DownloadsFolder
     {
-#if PLACE_IN_DOWNLOADS
+#if WIXSHAR_FLUENT_CACHE_IN_DOWNLOADS
         private static Guid folderDownloads = new Guid("374DE290-123F-4565-9164-39C4925E467B");
 
         [DllImport("shell32.dll", CharSet = CharSet.Auto)]
