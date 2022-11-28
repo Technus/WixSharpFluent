@@ -6,6 +6,7 @@ using DLL = System.Reflection.Assembly;
 using WixSharp.Fluent.Attributes;
 using System.Collections.Generic;
 using static WixSharp.Fluent.Extensions.AssemblyAttributeExtensions;
+using System.Linq;
 
 namespace WixSharp.Fluent.Extensions
 {
@@ -96,10 +97,9 @@ namespace WixSharp.Fluent.Extensions
         /// <returns></returns>
         public static WixProjectT SetPreserveTempFiles<WixProjectT>(this WixProjectT project, bool? preserveTempFiles = null, bool noThrow = false, DLL assembly = null) where WixProjectT : WixProject
         {
-            project.PreserveTempFiles =
-                preserveTempFiles ??
-                GetAssemblyAttribute<AssemblyConfigurationAttribute>(noThrow, assembly)?.Configuration?.ToUpper()?.Contains("DEBUG") ??
-                project.PreserveTempFiles;
+            var configDebug = GetAssemblyAttribute<AssemblyConfigurationAttribute>(noThrow, assembly)?.Configuration?.ToUpper()?.Contains("DEBUG") ?? false;
+            var definesDebug = GetAssemblyAttribute<AssemblyDefinesAttribute>(noThrow,assembly)?.Defines?.Keys.Where(s=>s.ToUpper().Contains("DEBUG")).Any();
+            project.PreserveTempFiles = preserveTempFiles ?? (configDebug | definesDebug) ?? project.PreserveTempFiles;
             return project;
         }
 
