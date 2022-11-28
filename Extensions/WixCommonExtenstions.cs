@@ -21,6 +21,31 @@ namespace WixSharp.Fluent.Extensions
             GuidDictionary.Initialize();
             Compiler.AllowNonRtfLicense = true;//Fine since only Hyperlink is allowed anyway
             MSBuild.EmitAutoGenFiles = false;
+            InjectFolderMappings();
+        }
+
+        private static void InjectFolderMappings()
+        {
+            Dictionary<string, string> EnvironmentConstantsMapping = typeof(Compiler)
+                .GetField(nameof(EnvironmentConstantsMapping), BindingFlags.Static | BindingFlags.NonPublic)
+                .GetValue(null) as Dictionary<string, string>;
+            EnvironmentConstantsMapping.Add("%ProgramFiles32Folder%", "ProgramFilesFolder");//Allow forced x86 location
+            EnvironmentConstantsMapping.Add("%ProgramFiles32%", "ProgramFilesFolder");//Allow forced x86 location
+
+            EnvironmentConstantsMapping.Add("%ProgramFiles6432Folder%", "ProgramFiles6432Folder");//Allow platform based selection
+            EnvironmentConstantsMapping.Add("%ProgramFiles6432%", "ProgramFiles6432Folder");//Allow platform based selection
+
+            EnvironmentConstantsMapping.Add("%CommonFiles32Folder%", "CommonFilesFolder");//Allow forced x86 location
+            EnvironmentConstantsMapping.Add("%CommonFiles32%", "CommonFilesFolder");//Allow forced x86 location
+
+            EnvironmentConstantsMapping.Add("%CommonFiles6432Folder%", "CommonFiles6432Folder");//Allow platform based selection
+            EnvironmentConstantsMapping.Add("%CommonFiles6432%", "CommonFiles6432Folder");//Allow platform based selection
+
+            EnvironmentConstantsMapping.Add("%System32Folder%", "SystemFolder");//It will point to x64 on x64 platforms
+            EnvironmentConstantsMapping.Add("%System32%", "SystemFolder");//It will point to x64 on x64 platforms
+
+            EnvironmentConstantsMapping.Add("%System6432Folder%", "SystemFolder");//Allow platform based selection
+            EnvironmentConstantsMapping.Add("%System6432%", "SystemFolder");//Allow platform based selection
         }
 
         /// <summary>
