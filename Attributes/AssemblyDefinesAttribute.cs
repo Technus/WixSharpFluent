@@ -38,8 +38,8 @@ namespace WixSharp.Fluent.Attributes
                 {
                     var split = define.Split('=').Select(s => s.Trim()).ToArray();
                     if (split.Length == 2)
-                        Defines.Add(split[0], split[1]);
-                    else Defines.Add(split[0], "");
+                        dict.Add(split[0], split[1]);
+                    else dict.Add(split[0], "");
                 }
                 return dict;
             }
