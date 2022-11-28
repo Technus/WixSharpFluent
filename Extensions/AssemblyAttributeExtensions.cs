@@ -20,10 +20,15 @@ namespace WixSharp.Fluent.Extensions
 
         static AssemblyAttributeExtensions()
         {
-            AssembliesToIgnoreWhileLookingUp.Add(typeof(WixCommonExtensions).Assembly);
+            AssembliesToIgnoreWhileLookingUp.Add(DLL.GetExecutingAssembly());
         }
 
-        private static DLL GetOtherCallingAssembly()
+        /// <summary>
+        /// stack trace crawl to find a non blacklisted Assembly in <see cref="AssembliesToIgnoreWhileLookingUp"/> 
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public static DLL GetOtherCallingAssembly()
         {
             var frames = new StackTrace().GetFrames();
             for (int frameNumber = 1; frameNumber < frames.Length; frameNumber++)
@@ -38,7 +43,15 @@ namespace WixSharp.Fluent.Extensions
             throw new Exception("Could not identify calling assembly");
         }
 
-        internal static AttributeT GetAssemblyAttribute<AttributeT>(bool noThrow = false, DLL assembly = null) where AttributeT : Attribute
+        /// <summary>
+        /// Gets An arbitrary Attribute from the assembly
+        /// </summary>
+        /// <typeparam name="AttributeT"></typeparam>
+        /// <param name="noThrow"></param>
+        /// <param name="assembly">If not specified will do a stack trace crawl to find a non blacklisted Assembly</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        public static AttributeT GetAssemblyAttribute<AttributeT>(bool noThrow = false, DLL assembly = null) where AttributeT : Attribute
         {
             assembly = assembly ?? GetOtherCallingAssembly();
 
