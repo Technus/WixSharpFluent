@@ -87,19 +87,19 @@ namespace WixSharp.Fluent.Extensions
         }
 
         /// <summary>
-        /// Sets if the temporary files should be preserved in output folder
+        /// Sets if the temporary files should be preserved in output folder,
         /// </summary>
         /// <typeparam name="WixProjectT"></typeparam>
         /// <param name="project"></param>
-        /// <param name="preserveTempFiles"></param>
+        /// <param name="preserveTempFiles">Defaults to detection of "Debug" in Configuration or ConstantDefines</param>
         /// <param name="noThrow"></param>
         /// <param name="assembly"></param>
         /// <returns></returns>
         public static WixProjectT SetPreserveTempFiles<WixProjectT>(this WixProjectT project, bool? preserveTempFiles = null, bool noThrow = false, DLL assembly = null) where WixProjectT : WixProject
         {
             var configDebug = GetAssemblyAttribute<AssemblyConfigurationAttribute>(noThrow, assembly)?.Configuration?.ToUpper()?.Contains("DEBUG") ?? false;
-            var definesDebug = GetAssemblyAttribute<AssemblyDefinesAttribute>(noThrow,assembly)?.Defines?.Keys.Where(s=>s.ToUpper().Contains("DEBUG")).Any();
-            project.PreserveTempFiles = preserveTempFiles ?? (configDebug | definesDebug) ?? project.PreserveTempFiles;
+            var definesDebug = GetAssemblyAttribute<AssemblyDefinesAttribute>(noThrow,assembly)?.Defines?.Keys?.Where(s=>s.ToUpper().Contains("DEBUG"))?.Any() ?? false;
+            project.PreserveTempFiles = preserveTempFiles ?? (configDebug || definesDebug);
             return project;
         }
 
