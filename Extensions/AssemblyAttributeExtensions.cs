@@ -84,6 +84,28 @@ namespace WixSharp.Fluent.Extensions
         }
 
         /// <summary>
+        /// Gets the path inside App Data from Assembly attribute
+        /// </summary>
+        /// <param name="noThrow"></param>
+        /// <param name="assembly"></param>
+        /// <returns></returns>
+        public static string GetAppDataPath(bool noThrow = false, DLL assembly = null)
+        {
+            return GetAssemblyAttribute<AssemblyAppDataPathAttribute>(noThrow, assembly)?.Path;
+        }
+
+        /// <summary>
+        /// Gets the path inside Common files from Assembly attribute
+        /// </summary>
+        /// <param name="noThrow"></param>
+        /// <param name="assembly"></param>
+        /// <returns></returns>
+        public static string GetCommonFilesPath(bool noThrow = false, DLL assembly = null)
+        {
+            return GetAssemblyAttribute<AssemblyCommonFilesPathAttribute>(noThrow, assembly)?.Path;
+        }
+
+        /// <summary>
         /// Gets the source path of files to include
         /// </summary>
         /// <param name="noThrow"></param>
