@@ -101,7 +101,7 @@ namespace WixSharp.Fluent.XML
         {
             if (string.IsNullOrEmpty(Property))
                 throw new ArgumentNullException("Property attribute cannot be empty");
-            return this.ToXElement(WixExtension.Util.ToXName("UpgradeVersion"));
+            return this.ToXElement("UpgradeVersion");
         }
     }
 }
