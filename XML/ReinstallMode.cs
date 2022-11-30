@@ -90,7 +90,7 @@ namespace WixSharp.Fluent.XML
         {
             if (a.fileRelated && b.fileRelated)
                 throw new ArgumentException("Cannot specify multiple filed related behaviours");
-            return new ReinstallMode((a.value + b.value).ToCharArray().Distinct().ToString(), a.fileRelated || b.fileRelated);
+            return new ReinstallMode(new string((a.value + b.value).ToCharArray().Distinct().ToArray()), a.fileRelated || b.fileRelated);
         }
 
         /// <summary>
