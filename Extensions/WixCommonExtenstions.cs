@@ -64,7 +64,7 @@ namespace WixSharp.Fluent.Extensions
             project.SetName(noThrow: noThrow, assembly: assembly);
             project.SetOutFileName(noThrow: noThrow, assembly: assembly);
             project.SetPreserveTempFiles(noThrow: noThrow, assembly: assembly);
-            project.AddExtensions(WixExtension.Bal,WixExtension.Util);
+            project.AddExtensions(WixExtension.Bal,WixExtension.Util,WixExtension.Fire,WixExtension.NetFx);
             project.PreserveDbgFiles = false;
             project.OutDir = wixOutputFolder;
             return project;
