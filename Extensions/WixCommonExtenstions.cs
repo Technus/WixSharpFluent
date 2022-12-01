@@ -15,6 +15,13 @@ namespace WixSharp.Fluent.Extensions
     /// </summary>
     public static class WixCommonExtensions
     {
+        /// <summary>
+        /// The Id used for installation folder referencing by default.
+        /// It is automatically assigned to folder which is the first one inside ProgramFiles.
+        /// May vary from MSI to MSI.
+        /// <see cref="AutoGenerationOptions.InstallDirDefaultId"/>
+        /// </summary>
+        public static readonly string InstallationFolderId = "INSTALLFOLDER";
         internal static string wixOutputFolder = "wix";
 
         static WixCommonExtensions()

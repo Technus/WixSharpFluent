@@ -13,6 +13,11 @@ namespace WixSharp.Fluent.Extensions
     /// </summary>
     public static class WixBundleExtensions
     {
+        /// <summary>
+        /// The name of variable used to pass installation directory for underlying MSI installation folders.
+        /// <see cref="WixCommonExtensions.InstallationFolderId"/>
+        /// </summary>
+        public static readonly string InstallationFolderVar = "InstallFolder";
         internal static readonly string elementPlacement = "Wix/Bundle";
         private static readonly string executableNameSuffix = " Setup";
 
@@ -341,7 +346,7 @@ namespace WixSharp.Fluent.Extensions
 
             var msiPackage = new MsiPackage(msiPath)
             {
-                MsiProperties = "INSTALLDIR=[InstallFolder]",
+                MsiProperties = $"{WixCommonExtensions.InstallationFolderId}=[{InstallationFolderVar}]",
             };
 
             if (preventSameVersionInstall)//this will prevent time wasting on same version install, might cause other issues idk the doc succ
@@ -356,16 +361,21 @@ namespace WixSharp.Fluent.Extensions
         /// </summary>
         /// <typeparam name="BundleT"></typeparam>
         /// <param name="bundle"></param>
-        /// <param name="pathInsideProgramFilesFolder"></param>
+        /// <param name="path"></param>
+        /// <param name="prefix">What is the program files folder called defaults to '%ProgramFiles%'</param>
         /// <param name="noThrow"></param>
         /// <param name="assembly"></param>
         /// <returns></returns>
-        public static BundleT AddInstallFolderVariable<BundleT>(this BundleT bundle, string pathInsideProgramFilesFolder=null, bool noThrow = false, DLL assembly = null) where BundleT : Bundle
+        public static BundleT AddInstallFolderVariable<BundleT>(this BundleT bundle, string path=null, string prefix = null, bool noThrow = false, DLL assembly = null) where BundleT : Bundle
         {
-            pathInsideProgramFilesFolder = pathInsideProgramFilesFolder ?? $@"{GetInstallationPath(noThrow,assembly)}\";
-            if(pathInsideProgramFilesFolder!=null)
+            if (prefix != null && path!=null)
+                path = Path.Combine(prefix,path);
+            else 
+                path = path ?? GetInstallationVar(prefix, noThrow, assembly);
+
+            if(path!=null)
             {
-                var installFolder = new Variable("InstallFolder", $"[ProgramFilesFolder]{pathInsideProgramFilesFolder}");//The Wix variable ends with slash anyway
+                var installFolder = new Variable(InstallationFolderVar, path);//The Wix variable ends with slash anyway
                 bundle.Variables = bundle.Variables.Combine(installFolder).ToArray();
             }
             return bundle;

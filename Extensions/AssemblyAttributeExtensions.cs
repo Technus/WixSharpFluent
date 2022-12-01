@@ -77,45 +77,109 @@ namespace WixSharp.Fluent.Extensions
         /// <summary>
         /// Gets the start menu path from Assembly attribute
         /// </summary>
+        /// <param name="prefix">Should be a wix Var like [...] or a rooted path</param>
         /// <param name="noThrow"></param>
         /// <param name="assembly"></param>
         /// <returns></returns>
-        public static string GetStartMenuPath(bool noThrow = false, DLL assembly = null)
+        public static string GetStartMenuPath(string prefix = null, bool noThrow = false, DLL assembly = null)
         {
-            return GetAssemblyAttribute<AssemblyStartMenuPathAttribute>(noThrow, assembly)?.Path;
+            return GetStartMenuVar(prefix ?? "%ProgramMenu%", noThrow, assembly);
         }
 
         /// <summary>
         /// Gets the installation path inside program files from Assembly attribute
         /// </summary>
+        /// <param name="prefix"></param>
         /// <param name="noThrow"></param>
         /// <param name="assembly"></param>
         /// <returns></returns>
-        public static string GetInstallationPath(bool noThrow = false, DLL assembly = null)
+        public static string GetInstallationPath(string prefix = null, bool noThrow = false, DLL assembly = null)
         {
-            return GetAssemblyAttribute<AssemblyProgramFilesPathAttribute>(noThrow, assembly)?.Path;
+            return GetInstallationVar(prefix ?? "%ProgramFiles%", noThrow, assembly);
         }
 
         /// <summary>
         /// Gets the path inside App Data from Assembly attribute
         /// </summary>
+        /// <param name="prefix"></param>
         /// <param name="noThrow"></param>
         /// <param name="assembly"></param>
         /// <returns></returns>
-        public static string GetAppDataPath(bool noThrow = false, DLL assembly = null)
+        public static string GetAppDataPath(string prefix = null, bool noThrow = false, DLL assembly = null)
         {
-            return GetAssemblyAttribute<AssemblyAppDataPathAttribute>(noThrow, assembly)?.Path;
+            return GetAppDataVar(prefix ?? "%CommonAppData%", noThrow,assembly);
         }
 
         /// <summary>
         /// Gets the path inside Common files from Assembly attribute
         /// </summary>
+        /// <param name="prefix"></param>
         /// <param name="noThrow"></param>
         /// <param name="assembly"></param>
         /// <returns></returns>
-        public static string GetCommonFilesPath(bool noThrow = false, DLL assembly = null)
+        public static string GetCommonFilesPath(string prefix = null, bool noThrow = false, DLL assembly = null)
         {
-            return GetAssemblyAttribute<AssemblyCommonFilesPathAttribute>(noThrow, assembly)?.Path;
+            return GetCommonFilesVar(prefix ?? "%CommonFiles%", noThrow, assembly);
+        }
+
+        /// <summary>
+        /// Gets the start menu path from Assembly attribute
+        /// </summary>
+        /// <param name="prefix">Should be a wix Var like [...] or a rooted path</param>
+        /// <param name="noThrow"></param>
+        /// <param name="assembly"></param>
+        /// <returns></returns>
+        public static string GetStartMenuVar(string prefix = null, bool noThrow = false, DLL assembly = null)
+        {
+            prefix = prefix ?? "[ProgramMenuFolder]";
+            if (!prefix.StartsWith("["))
+                prefix += "\\";
+            return prefix + GetAssemblyAttribute<AssemblyStartMenuPathAttribute>(noThrow, assembly)?.Path ?? "";
+        }
+
+        /// <summary>
+        /// Gets the installation path inside program files from Assembly attribute
+        /// </summary>
+        /// <param name="prefix"></param>
+        /// <param name="noThrow"></param>
+        /// <param name="assembly"></param>
+        /// <returns></returns>
+        public static string GetInstallationVar(string prefix = null, bool noThrow = false, DLL assembly = null)
+        {
+            prefix = prefix ?? "[ProgramFilesFolder]";
+            if (!prefix.StartsWith("["))
+                prefix += "\\";
+            return prefix + GetAssemblyAttribute<AssemblyProgramFilesPathAttribute>(noThrow, assembly)?.Path ?? "";
+        }
+
+        /// <summary>
+        /// Gets the path inside App Data from Assembly attribute
+        /// </summary>
+        /// <param name="prefix"></param>
+        /// <param name="noThrow"></param>
+        /// <param name="assembly"></param>
+        /// <returns></returns>
+        public static string GetAppDataVar(string prefix = null, bool noThrow = false, DLL assembly = null)
+        {
+            prefix = prefix ?? "[CommonAppDataFolder]";
+            if (!prefix.StartsWith("["))
+                prefix += "\\";
+            return prefix + GetAssemblyAttribute<AssemblyAppDataPathAttribute>(noThrow, assembly)?.Path ?? "";
+        }
+
+        /// <summary>
+        /// Gets the path inside Common files from Assembly attribute
+        /// </summary>
+        /// <param name="prefix"></param>
+        /// <param name="noThrow"></param>
+        /// <param name="assembly"></param>
+        /// <returns></returns>
+        public static string GetCommonFilesVar(string prefix = null, bool noThrow = false, DLL assembly = null)
+        {
+            prefix = prefix ?? "[CommonFilesFolder]";
+            if (!prefix.StartsWith("["))
+                prefix += "\\";
+            return prefix + GetAssemblyAttribute<AssemblyCommonFilesPathAttribute>(noThrow, assembly)?.Path ?? "";
         }
 
         /// <summary>

@@ -59,6 +59,40 @@ namespace WixSharp.Fluent.Extensions
             return paths.PathsToPathPieces().Select(path=>path.JoinBy("\\")).ToArray();
         }
 
+        /// <summary>
+        /// Sets the Permission for everyone on the Dir
+        /// </summary>
+        /// <typeparam name="DirT"></typeparam>
+        /// <param name="dir"></param>
+        /// <returns></returns>
+        public static DirT SetPermisssionEveryone<DirT>(this DirT dir) where DirT : Dir
+        {
+            dir.Permissions = dir.Permissions.Combine(new DirPermission()
+            {
+                User = "Everyone",
+                GenericAll = true,
+            });
+            return dir;
+        }
 
+        /// <summary>
+        /// Adds the file to firewall exceptions
+        /// </summary>
+        /// <typeparam name="FileT"></typeparam>
+        /// <param name="file"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static FileT SetFireWallException<FileT>(this FileT file, string name = null) where FileT : File
+        {
+            name = name ?? System.IO.Path.GetFileName(file.TargetFileName ?? file.Name);
+            file.FirewallExceptions = file.FirewallExceptions.Combine(new FirewallException()
+            {
+                Scope = FirewallExceptionScope.any,
+                IgnoreFailure = true,
+                Profile = FirewallExceptionProfile.all,
+                Name = name,
+            });
+            return file;
+        }
     }
 }
