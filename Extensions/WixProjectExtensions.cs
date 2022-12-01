@@ -16,7 +16,7 @@ namespace WixSharp.Fluent.Extensions
     {
         internal static readonly string elementPlacement = "Wix/Product";
         private static readonly string iconPropName = "ARPPRODUCTICON";
-        private static readonly string downgradeErrorMessage = "A newer version of '[ProductName]' is already installed.";
+        private static readonly string downgradeErrorMessage = "A newer version is already installed.";
 
         /// <summary>
         /// Calls:
@@ -133,7 +133,6 @@ namespace WixSharp.Fluent.Extensions
         {
             project.MajorUpgrade = new MajorUpgrade
             {
-                //DisallowUpgradeErrorMessage = $"An older version of '[ProductName]' is already installed.",
                 DowngradeErrorMessage = downgradeErrorMessage ?? WixProjectExtensions.downgradeErrorMessage,
                 Schedule = UpgradeSchedule.afterInstallValidate,
                 AllowSameVersionUpgrades = false,
