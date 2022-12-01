@@ -84,7 +84,7 @@ namespace WixSharp.Fluent.Extensions
         /// <returns></returns>
         public static FileT SetFireWallException<FileT>(this FileT file, string name = null) where FileT : File
         {
-            name = name ?? System.IO.Path.GetFileName(file.TargetFileName ?? file.Name);
+            name = name ?? Path.GetFileNameWithoutExtension(file.TargetFileName ?? file.Name);
             file.FirewallExceptions = file.FirewallExceptions.Combine(new FirewallException()
             {
                 Scope = FirewallExceptionScope.any,
