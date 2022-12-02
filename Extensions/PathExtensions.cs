@@ -72,6 +72,7 @@ namespace WixSharp.Fluent.Extensions
 
         /// <summary>
         /// Sets the Permission for everyone on the Dir
+        /// Use only after testing if the dir persists for some reason...
         /// </summary>
         /// <typeparam name="DirT"></typeparam>
         /// <param name="dir"></param>
@@ -85,6 +86,7 @@ namespace WixSharp.Fluent.Extensions
         /// <summary>
         /// Gets create folder to use in <see cref="Dir"/>
         /// WixSharp auto injectes the matching RemoveFolder, so the body of this method only creates the create folder xml tag
+        /// Use only after testing if the dir persists for some reason...
         /// </summary>
         /// <returns></returns>
         public static CreateFolder GetCreateRemoveFolder()

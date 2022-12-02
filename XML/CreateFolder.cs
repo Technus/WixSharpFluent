@@ -3,12 +3,18 @@ using System.Xml.Linq;
 
 namespace WixSharp.Fluent.XML
 {
-    internal class CreateFolder : WixEntity, IGenericEntity
+    /// <summary>
+    /// Used to inject Create Folder (and automagically Remove Folder) XML tags to a directory
+    /// Use only after testing if the dir persists for some reason...
+    /// </summary>
+    public class CreateFolder : WixEntity, IGenericEntity
     {
+        /// <summary>
+        /// The XML processsor adding the tag(s)
+        /// </summary>
+        /// <param name="context"></param>
         public void Process(ProcessingContext context)
         {
-            context.Project.Include(WixExtension.Util);
-
             XElement element = this.ToXElement("CreateFolder");
 
             context.XParent
