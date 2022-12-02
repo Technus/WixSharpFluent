@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using WixSharp.Fluent.XML;
+using WixSharp.CommonTasks;
 
 namespace WixSharp.Fluent.Extensions
 {
@@ -60,6 +58,19 @@ namespace WixSharp.Fluent.Extensions
         }
 
         /// <summary>
+        /// Creates Dir Permission allowing every one inside
+        /// </summary>
+        /// <returns></returns>
+        public static DirPermission GetPermissionForEveryone()
+        {
+            return new DirPermission()
+            {
+                User = "Everyone",
+                GenericAll = true,
+            };
+        }
+
+        /// <summary>
         /// Sets the Permission for everyone on the Dir
         /// </summary>
         /// <typeparam name="DirT"></typeparam>
@@ -67,11 +78,30 @@ namespace WixSharp.Fluent.Extensions
         /// <returns></returns>
         public static DirT SetPermisssionEveryone<DirT>(this DirT dir) where DirT : Dir
         {
-            dir.Permissions = dir.Permissions.Combine(new DirPermission()
-            {
-                User = "Everyone",
-                GenericAll = true,
-            });
+            dir.Permissions = dir.Permissions.Combine(GetPermissionForEveryone());
+            return dir;
+        }
+
+        /// <summary>
+        /// Gets create folder to use in <see cref="Dir"/>
+        /// WixSharp auto injectes the matching RemoveFolder, so the body of this method only creates the create folder xml tag
+        /// </summary>
+        /// <returns></returns>
+        public static CreateFolder GetCreateRemoveFolder()
+        {
+            return new CreateFolder();//
+        }
+
+        /// <summary>
+        /// Adds remove and create folder to the <see cref="Dir"/>
+        /// WixSharp auto injectes the matching RemoveFolder, so the body of internally called method only creates the create folder xml tag
+        /// </summary>
+        /// <typeparam name="DirT"></typeparam>
+        /// <param name="dir"></param>
+        /// <returns></returns>
+        public static DirT AddCreateRemove<DirT>(this DirT dir) where DirT : Dir
+        {
+            dir.Add(GetCreateRemoveFolder());
             return dir;
         }
 

@@ -267,5 +267,60 @@ namespace WixSharp.Fluent.Extensions
             project.AddWixFragment(elementPlacement, content);
             return project;
         }
+
+        /// <summary>
+        /// Adds additional RECURSIVE cleanup logic for a folder (which resits to be removed).
+        /// Adds:
+        /// <see cref="RegValue"/> with the path
+        /// <see cref="Property"/> which looks up with <see cref="RegistrySearch"/> for the <see cref="RegValue"/>
+        /// <see cref="UtilRemoveFolderEx"/> wichh looks up the <see cref="Property"/> for the path to clear
+        /// </summary>
+        /// <typeparam name="ProjectT"></typeparam>
+        /// <param name="project"></param>
+        /// <param name="dirId">directory id</param>
+        /// <param name="key">registry key</param>
+        /// <param name="name">registry entry name</param>
+        /// <param name="productFeature"></param>
+        /// <param name="addCreateDir"></param>
+        /// <returns></returns>
+        public static ProjectT AddRemoveFolderEx<ProjectT>(this ProjectT project, string dirId, string key, string name = "InstallPath", Feature productFeature = null) where ProjectT : Project
+        {
+            productFeature = productFeature ?? project.DefaultFeature;
+            var propName = $"{dirId}InstallPathSearch".EscapeIllegalCharacters().ToUpper();
+
+            project.AddRegValue(new RegValue
+            {
+                Id = $"{dirId}InstallPath",
+                Feature = productFeature,
+                Root = RegistryHive.LocalMachine,
+                Key = key,
+                Name = name,
+                Value = $"[{dirId}]",
+                Type = "string",
+                ForceCreateOnInstall = true,
+                ForceDeleteOnUninstall = true,
+            });
+
+            project.AddProperty(new Property(propName, 
+                new RegistrySearch(RegistryHive.LocalMachine, key, name, RegistrySearchType.raw)
+                {
+                    Feature= productFeature,
+                })
+            {
+                Feature= productFeature,
+            });
+            
+            project.Add(new UtilRemoveFolderEx()
+            {
+                Id = $"{dirId}UtilRemoveFolderEx",
+                Directory = dirId,
+                Feature = productFeature,
+                Property = propName,
+                On = InstallEvent.uninstall,
+                FeatureId= productFeature.Id,
+            });
+
+            return project;
+        }
     }
 }

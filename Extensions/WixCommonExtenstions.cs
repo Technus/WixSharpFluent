@@ -1,6 +1,5 @@
 ﻿using System;
 using WixSharp.Bootstrapper;
-using System.Diagnostics;
 using System.Reflection;
 using DLL = System.Reflection.Assembly;
 using WixSharp.Fluent.Attributes;
