@@ -60,6 +60,7 @@ namespace WixSharp.Fluent.Extensions
             bundle.WixExtensions.AddRange(project.WixExtensions);
             bundle.OutDir = project.OutDir;
             bundle.SourceBaseDir = project.SourceBaseDir;
+            bundle.CustomIdAlgorithm = project.CustomIdAlgorithm;
 
             bundle.Variables = bundle.Variables.Combine(new Variable($"VERSION_MAIN")
             {
