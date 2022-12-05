@@ -5,6 +5,8 @@ using System.IO;
 using DLL = System.Reflection.Assembly;
 using WixSharp.Fluent.Attributes;
 using static WixSharp.Fluent.Extensions.AssemblyAttributeExtensions;
+using WixSharp.CommonTasks;
+using System.Xml.Linq;
 
 namespace WixSharp.Fluent.Extensions
 {
@@ -415,6 +417,22 @@ namespace WixSharp.Fluent.Extensions
             System.IO.File.WriteAllText(name, $"CD /d \"{pathToRoot}\"\r\n{System.IO.File.ReadAllText(name)}");//Fix relative paths..
 
             return bundle;
+        }
+
+        /// <summary>
+        /// Adds Condition element from Wix Extension bal 
+        /// http://schemas.microsoft.com/wix/BalExtension
+        /// </summary>
+        /// <typeparam name="BundleT"></typeparam>
+        /// <param name="project"></param>
+        /// <param name="message"></param>
+        /// <param name="condition"></param>
+        /// <returns></returns>
+        public static BundleT AddCondition<BundleT>(this BundleT project, string message, string condition) where BundleT : Bundle
+        {
+            var xmlNamespace = WixExtension.Bal.XmlNamespace;
+            project.AddXml(elementPlacement, $@"<Condition xmlns=""{xmlNamespace}"" Message=""{message}"">{condition}</Condition>");
+            return project;
         }
     }
 }
