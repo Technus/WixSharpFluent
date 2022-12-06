@@ -281,7 +281,6 @@ namespace WixSharp.Fluent.Extensions
         /// <param name="key">registry key</param>
         /// <param name="name">registry entry name</param>
         /// <param name="productFeature"></param>
-        /// <param name="addCreateDir"></param>
         /// <returns></returns>
         public static ProjectT AddRemoveFolderEx<ProjectT>(this ProjectT project, string dirId, string key, string name = "InstallPath", Feature productFeature = null) where ProjectT : Project
         {
@@ -320,6 +319,23 @@ namespace WixSharp.Fluent.Extensions
                 FeatureId= productFeature.Id,
             });
 
+            return project;
+        }
+
+        /// <summary>
+        /// Adds the smart Feature <see cref="FeatureExtensions.SetSmart{FeatureT}(FeatureT, string, string, int?)"/> mathing property
+        /// </summary>
+        /// <typeparam name="ProjectT"></typeparam>
+        /// <param name="project"></param>
+        /// <param name="feature"></param>
+        /// <param name="propertyName"><see cref="FeatureExtensions.GetPropertyName{FeatureT}(FeatureT)"/> Generates default value</param>
+        /// <param name="defaultValue">By default "1"</param>
+        /// <returns></returns>
+        public static ProjectT AddSmartFeatureProperty<ProjectT>(this ProjectT project, Feature feature, string propertyName = null, string defaultValue=null) where ProjectT : Project
+        {
+            propertyName = propertyName ?? feature.GetPropertyName();
+            defaultValue = defaultValue ?? "1";
+            project.AddProperty(new Property(propertyName, defaultValue));
             return project;
         }
     }

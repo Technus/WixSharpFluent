@@ -15,7 +15,17 @@
 		<Title>WixSharp Fluent Code Library</Title>
 		<PackageIcon>Neith_spacepedia.png</PackageIcon>
 		<PackageTags>WixSharp;WixSharpFluent;WixSharp Fluent;Fluent;</PackageTags>
+		<Description>WixSharp Fluent Extensions.
+MSBuild parameter passing via additional Assembly Attributes, for installer project (not the source project, that requires explicit assembly parameter).</Description>
+		<PackageProjectUrl>https://github.com/Technus/WixSharpFluent</PackageProjectUrl>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<RepositoryUrl>https://github.com/Technus/WixSharpFluent</RepositoryUrl>
+		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+		<VersionPrefix>1.0.1</VersionPrefix>
 	</PropertyGroup>
+	<ItemGroup>
+	  <Content Include="Neith_spacepedia.png" />
+	</ItemGroup>
 
 
 	<ItemGroup>
@@ -23,9 +33,17 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<None Update="LICENSE.txt">
+		  <Pack>True</Pack>
+		  <PackagePath>\</PackagePath>
+		</None>
 		<None Update="Neith_spacepedia.png">
 			<Pack>True</Pack>
 			<PackagePath>\</PackagePath>
+		</None>
+		<None Update="README.md">
+		  <Pack>True</Pack>
+		  <PackagePath>\</PackagePath>
 		</None>
 	</ItemGroup>
 
