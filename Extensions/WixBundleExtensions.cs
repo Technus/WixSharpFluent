@@ -329,8 +329,9 @@ namespace WixSharp.Fluent.Extensions
         /// <param name="project"></param>
         /// <param name="msiPath">Will Build MSI for you if path is null</param>
         /// <param name="preventSameVersionInstall">Use <see cref="UtilProductSearch"/> check to install if same version is present</param>
+        /// <param name="properties"></param>
         /// <returns></returns>
-        public static BundleT AddMsiProject<BundleT>(this BundleT bundle, Project project, string msiPath = null, bool preventSameVersionInstall = false) where BundleT : Bundle
+        public static BundleT AddMsiProject<BundleT>(this BundleT bundle, Project project, string msiPath = null, bool preventSameVersionInstall = false, params string[] properties) where BundleT : Bundle
         {
             msiPath = msiPath ?? project.BuildMsi();
 
@@ -351,6 +352,9 @@ namespace WixSharp.Fluent.Extensions
             {
                 MsiProperties = $"{WixCommonExtensions.InstallationFolderId}=[{InstallationFolderVar}]",
             };
+
+            if(properties!=null && properties.Length>0)
+                msiPackage.MsiProperties += $"; {properties.JoinBy("; ")}";
 
             if (preventSameVersionInstall)//this will prevent time wasting on same version install, might cause other issues idk the doc succ
                 msiPackage.InstallCondition = $"MSI_VERSION_MAIN > MSI_INSTALLED_MAIN";
