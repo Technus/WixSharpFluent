@@ -83,7 +83,7 @@ namespace Installer
       product.AddDirs(
           new InstallDir(InstallationFolderId.ToId(),GetInstallationPath(),
               new DirFiles($@"{GetSourcePath()}\*.*", f => !f.EndsWith(mainFileName) && !f.EndsWith(".pdb")),//'!f.EndsWith(exeFileName)' To not duplicate the file below
-              mainExecutable//,new File(productFeature, $@"{GetSourcePath()}\pl-PL\Idefix.NoahDataExtractor.resources.dll")
+              mainExecutable,
               ),
 
           new Dir(GetStartMenuPath(),
