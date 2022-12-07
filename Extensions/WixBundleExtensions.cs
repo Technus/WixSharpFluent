@@ -382,7 +382,10 @@ namespace WixSharp.Fluent.Extensions
 
             if(path!=null)
             {
-                var installFolder = new Variable(InstallationFolderVar, path);//The Wix variable ends with slash anyway
+                var installFolder = new Variable(InstallationFolderVar, path)
+                {
+                    Overridable = true
+                };//The Wix variable ends with slash anyway
                 bundle.Variables = bundle.Variables.Combine(installFolder).ToArray();
             }
             return bundle;
@@ -437,6 +440,19 @@ namespace WixSharp.Fluent.Extensions
             var xmlNamespace = WixExtension.Bal.XmlNamespace;
             project.AddXml(elementPlacement, $@"<Condition xmlns=""{xmlNamespace}"" Message=""{message}"">{condition}</Condition>");
             return project;
+        }
+
+        /// <summary>
+        /// Adds a variable to bundle
+        /// </summary>
+        /// <typeparam name="BundleT"></typeparam>
+        /// <param name="bundle"></param>
+        /// <param name="variable"></param>
+        /// <returns></returns>
+        public static BundleT AddVariable<BundleT>(this BundleT bundle, Variable variable) where BundleT : Bundle
+        {
+            bundle.Variables = bundle.Variables.Combine(variable).ToArray();
+            return bundle;
         }
     }
 }

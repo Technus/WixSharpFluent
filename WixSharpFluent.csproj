@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework>net48</TargetFramework>
 		<OutputType>Library</OutputType>
@@ -21,7 +21,7 @@ MSBuild parameter passing via additional Assembly Attributes, for installer proj
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<RepositoryUrl>https://github.com/Technus/WixSharpFluent</RepositoryUrl>
 		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-		<VersionPrefix>1.0.1</VersionPrefix>
+		<VersionPrefix>1.0.3</VersionPrefix>
 	</PropertyGroup>
 	<ItemGroup>
 	  <Content Include="Neith_spacepedia.png" />

@@ -135,7 +135,7 @@ namespace WixSharp.Fluent.Extensions
         /// <typeparam name="WixEntityT"></typeparam>
         /// <param name="entity"></param>
         /// <param name="feature">Feature, with defined Name and matching property</param>
-        /// <param name="condition"></param>
+        /// <param name="condition">Defaults to condition on single feature, </param>
         /// <returns></returns>
         public static WixEntityT SetFeatureAndCondition<WixEntityT>(this WixEntityT entity, Feature feature,string condition = null) where WixEntityT : WixEntity
         {
@@ -143,9 +143,7 @@ namespace WixSharp.Fluent.Extensions
                 feature.Id = feature.ComputeId();
 
             //The '!' operator reads the feature state
-            condition = condition ?? 
-                Condition.Create($"!{feature.Id} = {((int)InstallState.Local)}") |
-                Condition.Create($"{feature.GetPropertyName()} = 1");
+            condition = condition ?? feature.GetCondition();
 
             entity.Feature = feature;
             entity.ComponentCondition = condition;
@@ -159,11 +157,12 @@ namespace WixSharp.Fluent.Extensions
         /// <typeparam name="WixEntitiesT"></typeparam>
         /// <param name="entities"></param>
         /// <param name="feature"></param>
+        /// <param name="condition"></param>
         /// <returns></returns>
-        public static WixEntitiesT SetFeaturesAndConditions<WixEntitiesT>(this WixEntitiesT entities, Feature feature) where WixEntitiesT : IEnumerable<WixEntity>
+        public static WixEntitiesT SetFeaturesAndConditions<WixEntitiesT>(this WixEntitiesT entities, Feature feature, string condition = null) where WixEntitiesT : IEnumerable<WixEntity>
         {
             foreach (var item in entities)
-                item.SetFeatureAndCondition(feature);
+                item.SetFeatureAndCondition(feature, condition);
             return entities;
         }
     }

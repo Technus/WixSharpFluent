@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Microsoft.Deployment.WindowsInstaller;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -61,6 +63,58 @@ namespace WixSharp.Fluent.Extensions
             feature.Condition = new FeatureCondition(Condition.Create(condition), targetLevel ?? 2);
 
             return feature;
+        }
+
+        /// <summary>
+        /// Gets the default condition to enable this feature
+        /// </summary>
+        /// <typeparam name="FeatureT"></typeparam>
+        /// <param name="feature"></param>
+        /// <param name="state"></param>
+        /// <param name="propValue"></param>
+        /// <returns></returns>
+        public static Condition GetCondition<FeatureT>(this FeatureT feature, InstallState? state = null, string propValue = null) where FeatureT : Feature
+        {
+            state = state ?? InstallState.Local;
+            propValue = propValue ?? "1";
+
+            return Condition.Create($"!{feature.Id} = {((int)state)}") |
+                Condition.Create($"{feature.GetPropertyName()} = {propValue}");
+        }
+
+        /// <summary>
+        /// Due to certain limitations when setting condition on features you need to specify all features this components depends on (not needed if depends on one)
+        /// (this includes parent features if 'and-ed' check needs to be done on them too )
+        /// </summary>
+        /// <typeparam name="FeaturesT"></typeparam>
+        /// <typeparam name="FeatureT"></typeparam>
+        /// <param name="features"></param>
+        /// <param name="state"></param>
+        /// <param name="propValue"></param>
+        /// <returns></returns>
+        public static Condition GetConditions<FeaturesT>(this FeaturesT features, InstallState? state = null, string propValue = null) where FeaturesT : IEnumerable<Feature>
+        {
+            Condition condition=null;
+            foreach (var feature in features)
+                if (condition == null)
+                    condition = feature.GetCondition(state,propValue);
+                else
+                    condition &= feature.GetCondition(state, propValue);
+
+            condition = condition ?? Condition.Always;
+
+            return condition;
+        }
+
+        /// <summary>
+        /// Due to certain limitations when setting condition on features you need to specify all features this components depends on (not needed if depends on one)
+        /// (this includes parent features if 'and-ed' check needs to be done on them too )
+        /// </summary>
+        /// <param name="features"></param>
+        /// <returns></returns>
+        public static Condition GetConditions(params Feature[] features)
+        {
+            return features.GetConditions();
         }
     }
 }
