@@ -18,7 +18,7 @@ Which are read when calling respective methods from:
 
  It is also possible to read additonal information from the product assemblies.
  Just Provide The Assembly as parameter.
-
+ 
 ### CSPROJ
 
 ```XML
@@ -123,4 +123,28 @@ namespace Installer
 }
 ```
 
+## Util Extensions
 
+### PathExtensions
+
+Allow to separate paths/string easily by ';' or '\', while replacing all '/' with '\'.
+Usefull When dealing with multiple paths/constants in Assembly Attributes.
+
+### FeatureExtensions/WixEntityExtensions
+
+Help to make Features and entities.
+
+```C#
+//In Project or some Constant Pool Class
+internal static readonly Feature docs = new Feature("Documentation").SetSmart();
+
+//In project
+project.AddSmartFeatureProperty(docs);
+...Somewhere in your Dir tree or file listings...
+file.SetFeatureAndCondition(docs)
+files.SetFeaturesAndConditions(docs)
+...
+
+//In Bundle
+bundle.AddMsiProject(project, properties: $"{docs.GetPropertyName()}=[**ButtonNameFromBootstrapperTheme**]")
+```
