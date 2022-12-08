@@ -6,6 +6,7 @@ using Xunit.Asserts.Compare;
 using System.Reflection;
 using WixSharp.Fluent.Attributes;
 using DLL = System.Reflection.Assembly;
+using WixSharp.Fluent.XML;
 
 namespace WixSharp.Fluent.Extensions.Tests
 {
@@ -45,15 +46,54 @@ namespace WixSharp.Fluent.Extensions.Tests
                     Id = "Variable", 
                     Overridable = true 
                 });
-            provided.SetDefaults();
-            DeepAssert.Equal(expected, provided);
+            expected.UpgradeCode = new Guid("49D61823-8433-4CD4-A9BD-669F695587D0");
+
+            WixStandardBootstrapperApplication app;
+            if (bool.Parse(DLL.GetExecutingAssembly().GetCustomAttribute<AssemblyBootstrapperAttribute>().LicenseForceHyperLink))
+            {
+                app = new HyperlinkLicenseBootstraperApplication();
+            }
+            else
+            {
+                app = new HyperlinkLicenseBootstraperApplication();
+            }
+            var bootstrapperAttribute = DLL.GetExecutingAssembly().GetCustomAttribute<AssemblyBootstrapperAttribute>();
+
+            app.LicensePath = bootstrapperAttribute.LicensePath;
+            app.LogoFile = bootstrapperAttribute.LogoPath;
+            app.ThemeFile = bootstrapperAttribute.ThemePath;
+            app.LocalizationFile = bootstrapperAttribute.LocalizationPath;
+            app.Payloads = app.Payloads.Combine(bootstrapperAttribute.Payloads);
+
+            expected.Application = app;
+            
+            provided.SetDefaults(noThrow:false);
+            DeepAssert.Equal(expected, provided,"Application");
+            DeepAssert.Equal(expected.Application, provided.Application,"Id");
         }
 
         [Theory()]
         [MemberData(nameof(BundleTestDataGenerator.GetWixProjectParameters), MemberType = typeof(BundleTestDataGenerator))]
         public void SetFromProjectTest(Bundle expected, Bundle provided)
         {
-            throw new NotImplementedException();
+            var project = new Project()
+            {
+                
+            }.SetDefaults(noThrow: false);
+
+            expected.OutDir = project.OutDir;
+            expected.OutFileName = project.OutFileName+" Setup";
+            expected.WixExtensions.AddRange(project.WixExtensions);
+            expected.IconFile = project.GetIconPath();
+            expected.Manufacturer = project.ControlPanelInfo.Manufacturer;
+            expected.Version = project.Version;
+            expected.CustomIdAlgorithm = project.CustomIdAlgorithm;
+            expected.Name = project.Name;
+            expected.PreserveTempFiles = project.PreserveTempFiles;
+            expected.SourceBaseDir = project.SourceBaseDir;
+
+            provided.SetFromProject(project);
+            DeepAssert.Equal(expected, provided, "Variables");
         }
 
         [Theory()]

@@ -15,6 +15,16 @@ using WixSharp.Fluent.Attributes;
 [assembly: AssemblyInsideInstallerName(ProductNameFull = "FullName")]
 [assembly: AssemblyProgramFilesPath(Path="testing")]
 [assembly: AssemblyStartMenuPath(Path="testing")]
+[assembly: AssemblyIconPath(Path ="testing")]
+[assembly: AssemblyBundleUpgradeCode(UpgradeCode = "49D61823-8433-4CD4-A9BD-669F695587D0")]
+[assembly: AssemblyProjectUpgradeCode(UpgradeCode = "49D61823-8433-4CD4-A9BD-669F695587D0")]
+[assembly: AssemblyBootstrapper(
+    LicenseForceHyperLink = "true",
+    LicensePath = "lic.pdf",
+    LocalizationPath = "loc.loc",
+    LogoPath = "logo.ico",
+    PayloadPaths = "goop.exe;boop.exe",
+    ThemePath = "theme.xml")]
 
 namespace WixSharp.Fluent.Extensions.Tests
 {

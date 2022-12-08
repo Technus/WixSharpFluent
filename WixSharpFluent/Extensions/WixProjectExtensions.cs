@@ -109,7 +109,7 @@ namespace WixSharp.Fluent.Extensions
                 upgradeCode ?? 
                 GetAssemblyAttribute<AssemblyProjectUpgradeCodeAttribute>(noThrow, assembly)?.UpgradeCodeGuid ??
                 project.UpgradeCode;
-            project.GUID = id ?? project.UpgradeCode ?? project.GUID;
+            project.GUID = id ?? project.UpgradeCode ?? project.GUID ?? Guid.NewGuid();
 
             if (!string.IsNullOrEmpty(version))
                 project.Version = new Version(version);

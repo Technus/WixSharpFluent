@@ -51,7 +51,7 @@ namespace WixSharp.Fluent.Extensions.Tests
                 bundle.Version = new Version(DLL.GetExecutingAssembly().GetCustomAttribute<AssemblyFileVersionAttribute>().Version);
                 bundle.Manufacturer = DLL.GetExecutingAssembly().GetCustomAttribute<AssemblyCompanyAttribute>().Company;
             }
-            provided.SetWixDefaults();
+            provided.SetWixDefaults(noThrow: false);
             DeepAssert.Equal(expected, provided);
         }
 
