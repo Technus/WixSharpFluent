@@ -12,7 +12,7 @@ namespace WixSharp.Fluent.Extensions
         /// </summary>
         /// <param name="guid"></param>
         /// <returns></returns>
-        public static string ToValidWixId(this string guid)
+        internal static string ToValidWixId(this string guid)
         {
             return $"_{guid.Replace("-", "")}";
         }

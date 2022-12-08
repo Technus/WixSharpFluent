@@ -8,7 +8,7 @@ namespace WixSharp.Fluent.Extensions
     /// </summary>
     public static class GuidDictionary
     {
-        private static readonly IDictionary<string, Guid> guidMap = new Dictionary<string, Guid>();
+        private static readonly IDictionary<string, Guid> guidMap = new Dictionary<string, Guid>(StringComparer.InvariantCulture);
         private static readonly List<string> ComponentPrefixes = new List<string>()
         {
             "Component."
@@ -77,6 +77,8 @@ namespace WixSharp.Fluent.Extensions
             var str = id.ToString();
             if (str.Contains("."))
                 throw new ArgumentException($"The ID can not contain '.': {str}",nameof(id));
+            if (string.IsNullOrWhiteSpace(str))
+                throw new ArgumentException("The string is empty", nameof(id));
             guidMap.Add(str, guid);
             return str;
         }

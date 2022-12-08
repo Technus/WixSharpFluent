@@ -20,7 +20,7 @@ namespace WixSharp.Fluent.XML
 
             var app = this.ToXElement(bal + "WixStandardBootstrapperApplication");
 
-            var payloads = this.Payloads.ToList();
+            var payloads = Payloads.ToList();
 
             if (LogoSideFile.IsEmpty())
                 root.SetAttribute("Id", "WixStandardBootstrapperApplication.HyperlinkLicense");

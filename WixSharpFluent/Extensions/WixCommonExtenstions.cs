@@ -86,9 +86,7 @@ namespace WixSharp.Fluent.Extensions
         public static WixProjectT AddExtensions<WixProjectT>(this WixProjectT project,params WixExtension[] extensions) where WixProjectT : WixProject
         {
             foreach (var extension in extensions)
-            {
                 project.Include(extension);
-            }
             return project;
         }
 

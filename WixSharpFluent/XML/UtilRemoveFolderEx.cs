@@ -55,6 +55,7 @@ namespace WixSharp.Fluent.XML
         /// <param name="context"></param>
         public void Process(ProcessingContext context) => PseudoProcessWithNewComponent(context);
 
+#if DEBUG
         /// <summary>
         /// The method demonstrates the correct way of integrating RemoveFolderEx.
         /// <para>
@@ -64,16 +65,17 @@ namespace WixSharp.Fluent.XML
         /// </para>
         /// </summary>
         /// <param name="context"></param>
-        public void PseudoProcessInjectToFirst(ProcessingContext context)
+        private void PseudoProcessInjectToFirst(ProcessingContext context)
         {
             context.Project.Include(WixExtension.Util); //indicate that candle needs to use WixUtilExtension.dll
-
+        
             XElement element = this.ToXElement(WixExtension.Util.ToXName("RemoveFolderEx"));
-
+        
             context.XParent
                    .FindFirst("Component")
                    .Add(element);
         }
+#endif
 
         /// <summary>
         /// This method is for demo purposes only. It show an alternative implementation of the
@@ -85,7 +87,7 @@ namespace WixSharp.Fluent.XML
         /// </para>
         /// </summary>
         /// <param name="context"></param>
-        public void PseudoProcessWithNewComponent(ProcessingContext context)
+        private void PseudoProcessWithNewComponent(ProcessingContext context)
         {
             context.Project.Include(WixExtension.Util);
 
@@ -100,6 +102,7 @@ namespace WixSharp.Fluent.XML
                    .Add(element);
         }
 
+#if DEBUG
         /// <summary>
         /// This method is for demo purposes only. It shows an alternative implementation of the
         /// Process(ProcessingContext) with placing the new element inside of the component and
@@ -111,20 +114,21 @@ namespace WixSharp.Fluent.XML
         /// </para>
         /// </summary>
         /// <param name="context"></param>
-        public void PseudoProcessWithNewComponentAndFeature(ProcessingContext context)
+        private void PseudoProcessWithNewComponentAndFeature(ProcessingContext context)
         {
             context.Project.Include(WixExtension.Util);
-
+        
             XElement element = this.ToXElement(WixExtension.Util.ToXName("RemoveFolderEx"));
-
+        
             context.XParent
                    .AddElement("Component", "Id=TestComponent;Guid=" + Guid.NewGuid())
                    .Add(element);
-
+        
             context.XParent
                    .Parent("Product")
                    .AddElement("Feature", "Id=TestFeature;Title=Test Feature;Absent=allow;Level=1")
                    .AddElement("ComponentRef", "Id=TestComponent");
         }
+#endif
     }
 }

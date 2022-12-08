@@ -47,4 +47,10 @@ MSBuild parameter passing via additional Assembly Attributes, for installer proj
 		</None>
 	</ItemGroup>
 
+	<ItemGroup>
+		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+			<_Parameter1>WixSharpFluent.Tests</_Parameter1>
+		</AssemblyAttribute>
+	</ItemGroup>
+
 </Project>

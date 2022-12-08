@@ -1,4 +1,5 @@
-﻿using WixSharp.Bootstrapper;
+﻿using System;
+using WixSharp.Bootstrapper;
 
 namespace WixSharp.Fluent.XML
 {

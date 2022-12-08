@@ -139,9 +139,6 @@ namespace WixSharp.Fluent.Extensions
         /// <returns></returns>
         public static WixEntityT SetFeatureAndCondition<WixEntityT>(this WixEntityT entity, Feature feature,string condition = null) where WixEntityT : WixEntity
         {
-            if (feature.Id == null)
-                feature.Id = feature.ComputeId();
-
             //The '!' operator reads the feature state
             condition = condition ?? feature.GetCondition();
 
