@@ -134,6 +134,12 @@ Usefull When dealing with multiple paths/constants in Assembly Attributes.
 
 Help to make Features and entities.
 
+#### Feature setting with bootstrappervariables
+
+It is also possible to use custom conditions/variable names.
+
+*But using custom variable names enforces to use custom conditions!*
+
 ```C#
 //In Project or some Constant Pool Class
 internal static readonly Feature docs = new Feature("Documentation").SetSmart();
