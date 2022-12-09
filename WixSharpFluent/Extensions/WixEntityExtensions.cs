@@ -51,7 +51,7 @@ namespace WixSharp.Fluent.Extensions
         /// <typeparam name="DirT"></typeparam>
         /// <param name="dir"></param>
         /// <returns></returns>
-        public static DirT SetPermisssionEveryone<DirT>(this DirT dir) where DirT : Dir
+        public static DirT AddPermisssionEveryone<DirT>(this DirT dir) where DirT : Dir
         {
             dir.Permissions = dir.Permissions.Combine(GetPermissionForEveryone());
             return dir;
@@ -66,7 +66,7 @@ namespace WixSharp.Fluent.Extensions
         /// <returns></returns>
         public static CreateFolder GetCreateRemoveFolder()
         {
-            return new CreateFolder();//
+            return new CreateFolder();
         }
 
         /// <summary>

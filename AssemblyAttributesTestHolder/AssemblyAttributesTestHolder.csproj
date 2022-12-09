@@ -1,0 +1,47 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	  <TargetFramework>net48</TargetFramework>
+	  <OutputType>Library</OutputType>
+  </PropertyGroup>
+
+	<ItemGroup>
+		<AssemblyAttribute Include="WixSharp.Fluent.Attributes.AssemblyExecutableNameAttribute">
+			<ExecutableName>Test</ExecutableName>
+		</AssemblyAttribute>
+		<AssemblyAttribute Include="WixSharp.Fluent.Attributes.AssemblyDefinesAttribute">
+			<DefineConstants>$(DefineConstants)</DefineConstants>
+		</AssemblyAttribute>
+		<AssemblyAttribute Include="WixSharp.Fluent.Attributes.AssemblyInsideInstallerNameAttribute">
+			<ProductNameFull>FullName</ProductNameFull>
+		</AssemblyAttribute>
+		<AssemblyAttribute Include="WixSharp.Fluent.Attributes.AssemblyProgramFilesPathAttribute">
+			<Path>testing</Path>
+		</AssemblyAttribute>
+		<AssemblyAttribute Include="WixSharp.Fluent.Attributes.AssemblyStartMenuPathAttribute">
+			<Path>testing</Path>
+		</AssemblyAttribute>
+		<AssemblyAttribute Include="WixSharp.Fluent.Attributes.AssemblyIconPathAttribute">
+			<Path>testing</Path>
+		</AssemblyAttribute>
+		<AssemblyAttribute Include="WixSharp.Fluent.Attributes.AssemblyBundleUpgradeCodeAttribute">
+			<UpgradeCode>49D61823-8433-4CD4-A9BD-669F695587D0</UpgradeCode>
+		</AssemblyAttribute>
+		<AssemblyAttribute Include="WixSharp.Fluent.Attributes.AssemblyProjectUpgradeCodeAttribute">
+			<UpgradeCode>49D61823-8433-4CD4-A9BD-669F695587D0</UpgradeCode>
+		</AssemblyAttribute>
+		<AssemblyAttribute Include="WixSharp.Fluent.Attributes.AssemblyBootstrapperAttribute">
+			<LicenseForceHyperLink>true</LicenseForceHyperLink>
+			<LicensePath>lic.pdf</LicensePath>
+			<LocalizationPath>loc.loc</LocalizationPath>
+			<LogoPath>logo.ico</LogoPath>
+			<PayloadPaths>goop.exe;boop.exe</PayloadPaths>
+			<ThemePath>theme.xml</ThemePath>
+		</AssemblyAttribute>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\WixSharpFluent\WixSharpFluent.csproj" />
+	</ItemGroup>
+	
+</Project>

@@ -23,6 +23,7 @@ MSBuild parameter passing via additional Assembly Attributes, for installer proj
 		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
 		<VersionPrefix>1.0.3</VersionPrefix>
 	</PropertyGroup>
+	
 	<ItemGroup>
 	  <Content Include="Neith_spacepedia.png" />
 	</ItemGroup>

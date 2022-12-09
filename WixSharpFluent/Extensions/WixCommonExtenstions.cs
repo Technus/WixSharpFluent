@@ -101,9 +101,13 @@ namespace WixSharp.Fluent.Extensions
         /// <returns></returns>
         public static WixProjectT SetPreserveTempFiles<WixProjectT>(this WixProjectT project, bool? preserveTempFiles = null, bool noThrow = false, DLL assembly = null) where WixProjectT : WixProject
         {
-            var configDebug = GetConfiguration(noThrow,assembly)?.ToUpper()?.Contains("DEBUG") ?? false;
-            var definesDebug = GetDefines(noThrow,assembly)?.Defines?.Keys?.Where(s=>s.ToUpper().Contains("DEBUG"))?.Any() ?? false;
-            project.PreserveTempFiles = preserveTempFiles ?? (configDebug || definesDebug);
+            if (preserveTempFiles == null)
+            {
+                var configDebug =  GetConfiguration(noThrow,assembly)?.ToUpper()?.Contains("DEBUG") ?? false;
+                var definesDebug = GetDefines(noThrow,assembly)?.Defines?.Keys?.Where(s=>s.ToUpper().Contains("DEBUG"))?.Any() ?? false;
+                preserveTempFiles = configDebug || definesDebug;
+            }
+            project.PreserveTempFiles = preserveTempFiles ?? false;
             return project;
         }
 

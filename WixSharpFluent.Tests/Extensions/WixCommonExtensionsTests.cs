@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using System.Reflection;
 using DLL = System.Reflection.Assembly;
 using System;
+using static WixSharp.Fluent.Extensions.Tests.AssemblyAttributeExtensionsTests;
 
 namespace WixSharp.Fluent.Extensions.Tests
 {
@@ -34,8 +35,8 @@ namespace WixSharp.Fluent.Extensions.Tests
         [MemberData(nameof(TestDataGenerator.GetWixProjectParameters),MemberType = typeof(TestDataGenerator))]
         public void SetWixDefaultsTest(WixProject expected,WixProject provided)
         {
-            expected.OutFileName = DLL.GetExecutingAssembly().GetCustomAttribute<AssemblyProductAttribute>().Product;
-            expected.Name = DLL.GetExecutingAssembly().GetCustomAttribute<AssemblyInsideInstallerNameAttribute>().ProductNameFull;
+            expected.OutFileName = testAssembly.GetCustomAttribute<AssemblyProductAttribute>().Product;
+            expected.Name = testAssembly.GetCustomAttribute<AssemblyInsideInstallerNameAttribute>().ProductNameFull;
             expected.OutDir = "wix";
             expected.Include(WixExtension.Bal);
             expected.Include(WixExtension.Util);
@@ -43,15 +44,20 @@ namespace WixSharp.Fluent.Extensions.Tests
             expected.Include(WixExtension.NetFx);
             if (expected is Project project)
             {
-                project.Version = new Version(DLL.GetExecutingAssembly().GetCustomAttribute<AssemblyFileVersionAttribute>().Version);
-                project.ControlPanelInfo.Manufacturer = DLL.GetExecutingAssembly().GetCustomAttribute<AssemblyCompanyAttribute>().Company;
+                project.Version = new Version(testAssembly.GetCustomAttribute<AssemblyFileVersionAttribute>().Version);
+                project.ControlPanelInfo.Manufacturer = testAssembly.GetCustomAttribute<AssemblyCompanyAttribute>().Company;
             }
             else if (expected is Bundle bundle)
             {
-                bundle.Version = new Version(DLL.GetExecutingAssembly().GetCustomAttribute<AssemblyFileVersionAttribute>().Version);
-                bundle.Manufacturer = DLL.GetExecutingAssembly().GetCustomAttribute<AssemblyCompanyAttribute>().Company;
+                bundle.Version = new Version(testAssembly.GetCustomAttribute<AssemblyFileVersionAttribute>().Version);
+                bundle.Manufacturer = testAssembly.GetCustomAttribute<AssemblyCompanyAttribute>().Company;
             }
-            provided.SetWixDefaults(noThrow: false);
+#if DEBUG
+            expected.PreserveTempFiles = true;
+#else
+            expected.PreserveTempFiles = false;
+#endif
+            provided.SetWixDefaults(noThrow: false, assembly: testAssembly);
             DeepAssert.Equal(expected, provided);
         }
 
@@ -75,7 +81,12 @@ namespace WixSharp.Fluent.Extensions.Tests
         [MemberData(nameof(TestDataGenerator.GetWixProjectParameters), MemberType = typeof(TestDataGenerator))]
         public void SetPreserveTempFilesTest(WixProject expected, WixProject provided)
         {
-            provided.SetPreserveTempFiles();
+#if DEBUG
+            expected.PreserveTempFiles = true;
+#else
+            expected.PreserveTempFiles = false;
+#endif
+            provided.SetPreserveTempFiles(assembly: testAssembly);
             DeepAssert.Equal(expected, provided);
 
             expected.PreserveTempFiles = true;
@@ -91,16 +102,16 @@ namespace WixSharp.Fluent.Extensions.Tests
         [MemberData(nameof(TestDataGenerator.GetWixProjectParameters), MemberType = typeof(TestDataGenerator))]
         public void SetNameTest(WixProject expected, WixProject provided)
         {
-            expected.Name = DLL.GetExecutingAssembly().GetCustomAttribute<AssemblyInsideInstallerNameAttribute>().ProductNameFull;
-            provided.SetName();
+            expected.Name = testAssembly.GetCustomAttribute<AssemblyInsideInstallerNameAttribute>().ProductNameFull;
+            provided.SetName(assembly: testAssembly);
             DeepAssert.Equal(expected, provided);
 
             expected.Name = "AName";
             provided.SetName("AName");
             DeepAssert.Equal(expected, provided);
 
-            expected.Name = DLL.GetExecutingAssembly().GetCustomAttribute<AssemblyInsideInstallerNameAttribute>().ProductNameFull;
-            provided.SetName(assembly: DLL.GetExecutingAssembly());
+            expected.Name = testAssembly.GetCustomAttribute<AssemblyInsideInstallerNameAttribute>().ProductNameFull;
+            provided.SetName(assembly: testAssembly);
             DeepAssert.Equal(expected, provided);
         }
 
@@ -108,16 +119,16 @@ namespace WixSharp.Fluent.Extensions.Tests
         [MemberData(nameof(TestDataGenerator.GetWixProjectParameters), MemberType = typeof(TestDataGenerator))]
         public void SetOutFileNameTest(WixProject expected, WixProject provided)
         {
-            expected.OutFileName = DLL.GetExecutingAssembly().GetCustomAttribute<AssemblyProductAttribute>().Product;
-            provided.SetOutFileName();
+            expected.OutFileName = testAssembly.GetCustomAttribute<AssemblyProductAttribute>().Product;
+            provided.SetOutFileName(assembly: testAssembly);
             DeepAssert.Equal(expected, provided);
 
             expected.OutFileName = "WixSharpFluent";
             provided.SetOutFileName("WixSharpFluent");
             DeepAssert.Equal(expected, provided);
 
-            expected.OutFileName = DLL.GetExecutingAssembly().GetCustomAttribute<AssemblyProductAttribute>().Product;
-            provided.SetOutFileName(assembly:DLL.GetExecutingAssembly());
+            expected.OutFileName = testAssembly.GetCustomAttribute<AssemblyProductAttribute>().Product;
+            provided.SetOutFileName(assembly:testAssembly);
             DeepAssert.Equal(expected, provided);
         }
 
@@ -126,10 +137,10 @@ namespace WixSharp.Fluent.Extensions.Tests
         public void SetVersionTest(WixProject expected, WixProject provided)
         {
             if(expected is Project project)
-                project.Version = new Version(DLL.GetExecutingAssembly().GetCustomAttribute<AssemblyFileVersionAttribute>().Version);
+                project.Version = new Version(testAssembly.GetCustomAttribute<AssemblyFileVersionAttribute>().Version);
             else if(expected is Bundle bundle)
-                bundle.Version = new Version(DLL.GetExecutingAssembly().GetCustomAttribute<AssemblyFileVersionAttribute>().Version);
-            provided.SetVersion();
+                bundle.Version = new Version(testAssembly.GetCustomAttribute<AssemblyFileVersionAttribute>().Version);
+            provided.SetVersion(assembly: testAssembly);
             DeepAssert.Equal(expected, provided);
 
             if (expected is Project project2)
@@ -140,10 +151,10 @@ namespace WixSharp.Fluent.Extensions.Tests
             DeepAssert.Equal(expected, provided);
 
             if (expected is Project project3)
-                project3.Version = new Version(DLL.GetExecutingAssembly().GetCustomAttribute<AssemblyFileVersionAttribute>().Version);
+                project3.Version = new Version(testAssembly.GetCustomAttribute<AssemblyFileVersionAttribute>().Version);
             else if (expected is Bundle bundle3)
-                bundle3.Version = new Version(DLL.GetExecutingAssembly().GetCustomAttribute<AssemblyFileVersionAttribute>().Version);
-            provided.SetVersion(assembly:DLL.GetExecutingAssembly());
+                bundle3.Version = new Version(testAssembly.GetCustomAttribute<AssemblyFileVersionAttribute>().Version);
+            provided.SetVersion(assembly:testAssembly);
             DeepAssert.Equal(expected, provided);
         }
 
@@ -152,10 +163,10 @@ namespace WixSharp.Fluent.Extensions.Tests
         public void SetManufacturerTest(WixProject expected, WixProject provided)
         {
             if (expected is Project project)
-                project.ControlPanelInfo.Manufacturer = DLL.GetExecutingAssembly().GetCustomAttribute<AssemblyCompanyAttribute>().Company;
+                project.ControlPanelInfo.Manufacturer = testAssembly.GetCustomAttribute<AssemblyCompanyAttribute>().Company;
             else if (expected is Bundle bundle)
-                bundle.Manufacturer = DLL.GetExecutingAssembly().GetCustomAttribute<AssemblyCompanyAttribute>().Company;
-            provided.SetManufacturer();
+                bundle.Manufacturer = testAssembly.GetCustomAttribute<AssemblyCompanyAttribute>().Company;
+            provided.SetManufacturer(assembly: testAssembly);
             DeepAssert.Equal(expected, provided);
 
             if (expected is Project project2)
@@ -166,10 +177,10 @@ namespace WixSharp.Fluent.Extensions.Tests
             DeepAssert.Equal(expected, provided);
 
             if (expected is Project project3)
-                project3.ControlPanelInfo.Manufacturer = DLL.GetExecutingAssembly().GetCustomAttribute<AssemblyCompanyAttribute>().Company;
+                project3.ControlPanelInfo.Manufacturer = testAssembly.GetCustomAttribute<AssemblyCompanyAttribute>().Company;
             else if (expected is Bundle bundle3)
-                bundle3.Manufacturer = DLL.GetExecutingAssembly().GetCustomAttribute<AssemblyCompanyAttribute>().Company;
-            provided.SetManufacturer(assembly: DLL.GetExecutingAssembly());
+                bundle3.Manufacturer = testAssembly.GetCustomAttribute<AssemblyCompanyAttribute>().Company;
+            provided.SetManufacturer(assembly: testAssembly);
             DeepAssert.Equal(expected, provided);
         }
     }

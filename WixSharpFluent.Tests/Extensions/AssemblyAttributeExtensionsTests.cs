@@ -3,33 +3,15 @@ using System;
 using static WixSharp.Fluent.Extensions.AssemblyAttributeExtensions;
 using DLL = System.Reflection.Assembly;
 using WixSharp.Fluent.Attributes;
-
-[assembly: AssemblyExecutableName(ExecutableName = "Test")]
-
-#if DEBUG
-[assembly: AssemblyDefines(DefineConstants = "DEBUG")]
-#else
-[assembly: AssemblyDefines(DefineConstants = "")]
-#endif
-
-[assembly: AssemblyInsideInstallerName(ProductNameFull = "FullName")]
-[assembly: AssemblyProgramFilesPath(Path="testing")]
-[assembly: AssemblyStartMenuPath(Path="testing")]
-[assembly: AssemblyIconPath(Path ="testing")]
-[assembly: AssemblyBundleUpgradeCode(UpgradeCode = "49D61823-8433-4CD4-A9BD-669F695587D0")]
-[assembly: AssemblyProjectUpgradeCode(UpgradeCode = "49D61823-8433-4CD4-A9BD-669F695587D0")]
-[assembly: AssemblyBootstrapper(
-    LicenseForceHyperLink = "true",
-    LicensePath = "lic.pdf",
-    LocalizationPath = "loc.loc",
-    LogoPath = "logo.ico",
-    PayloadPaths = "goop.exe;boop.exe",
-    ThemePath = "theme.xml")]
+using AssemblyAttributesTestHolder;
 
 namespace WixSharp.Fluent.Extensions.Tests
 {
+
     public class AssemblyAttributeExtensionsTests
     {
+        public static readonly DLL testAssembly = typeof(CallMe).Assembly;
+
         [Fact()]
         public void GetOtherCallingAssemblyTest()
         {
@@ -46,6 +28,8 @@ namespace WixSharp.Fluent.Extensions.Tests
             dll = GetOtherCallingAssembly();
             Assert.True(dll is DLL, "Must Find some Assembly");
             Assert.False(dll.Equals(thisDLL), "Pinpoint other Assembly");
+
+            AssembliesToIgnoreWhileLookingUp.Remove(thisDLL);
         }
 
         [Fact()]
@@ -55,7 +39,7 @@ namespace WixSharp.Fluent.Extensions.Tests
 
             AssembliesToIgnoreWhileLookingUp.Remove(thisDLL);
 
-            var attr = GetAssemblyAttribute<AssemblyExecutableNameAttribute>();
+            var attr = GetAssemblyAttribute<AssemblyExecutableNameAttribute>(assembly:testAssembly);
             Assert.True(attr is AssemblyExecutableNameAttribute, "Check returned type");
             Assert.True("Test".Equals(attr.ExecutableName), "Check content");
 
@@ -67,7 +51,7 @@ namespace WixSharp.Fluent.Extensions.Tests
                 {
                   attr = GetAssemblyAttribute<AssemblyExecutableNameAttribute>();
                 }
-                catch (ArgumentException ex)
+                catch (ArgumentException)
                 {
                     attr = null;
                     throw;
@@ -79,9 +63,11 @@ namespace WixSharp.Fluent.Extensions.Tests
             attr = GetAssemblyAttribute<AssemblyExecutableNameAttribute>(noThrow:true);
             Assert.False(attr is AssemblyExecutableNameAttribute, "Check returned type");
 
-            attr = GetAssemblyAttribute<AssemblyExecutableNameAttribute>(assembly:thisDLL);//Direct dll ref
+            attr = GetAssemblyAttribute<AssemblyExecutableNameAttribute>(assembly:testAssembly);
             Assert.True(attr is AssemblyExecutableNameAttribute, "Check returned type");
             Assert.True("Test".Equals(attr.ExecutableName), "Check content");
+
+            AssembliesToIgnoreWhileLookingUp.Remove(thisDLL);
         }
     }
 }

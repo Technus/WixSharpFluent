@@ -6,6 +6,7 @@ using WixSharp;
 using WixSharp.CommonTasks;
 using DLL = System.Reflection.Assembly;
 using static WixSharp.Fluent.Extensions.AssemblyAttributeExtensions;
+using System.Linq;
 
 namespace WixSharp.Fluent.Extensions
 {
@@ -46,12 +47,13 @@ namespace WixSharp.Fluent.Extensions
         /// </summary>
         /// <typeparam name="ProjectT"></typeparam>
         /// <param name="project"></param>
+        /// <param name="embedCab"></param>
         /// <returns></returns>
-        public static ProjectT SetMediaTemplate<ProjectT>(this ProjectT project) where ProjectT : Project
+        public static ProjectT SetMediaTemplate<ProjectT>(this ProjectT project, bool? embedCab = null) where ProjectT : Project
         {
             project.Add(new MediaTemplate()
             {
-                EmbedCab = true,
+                EmbedCab = embedCab ?? true,
             });
             project.Media.Clear();
             return project;
@@ -87,6 +89,10 @@ namespace WixSharp.Fluent.Extensions
                     reinstallMode += mode[i];
                 }
                 project.ReinstallMode = reinstallMode;
+            }
+            else
+            {
+                project.ReinstallMode = "omus";
             }
             return project;
         }
@@ -153,7 +159,13 @@ namespace WixSharp.Fluent.Extensions
         {
             iconPath = iconPath ?? GetAssemblyAttribute<AssemblyIconPathAttribute>(noThrow,assembly)?.Path;
             if(iconPath != null)
-                project.Properties = project.Properties.Combine(new Property(iconPropName, iconPath));
+            {
+                var prop = project.Properties.FirstOrDefault(p=> iconPropName.Equals(p.Name));
+                if(prop is null)
+                    project.Properties = project.Properties.Combine(new Property(iconPropName, iconPath));
+                else
+                    prop.Value = iconPath;
+            }
             return project;
         }
 
@@ -193,22 +205,19 @@ namespace WixSharp.Fluent.Extensions
         /// <typeparam name="ProjectT"></typeparam>
         /// <param name="project"></param>
         /// <param name="upgradeCode"></param>
-        /// <param name="noThrow"></param>
-        /// <param name="assembly"></param>
         /// <param name="upgradeVersions">upgrade version definitions</param>
         /// <returns></returns>
-        public static ProjectT AddUpgrade<ProjectT>(this ProjectT project, Guid? upgradeCode=null, bool noThrow = false, DLL assembly = null, params UpgradeVersion[] upgradeVersions) where ProjectT : Project
+        public static ProjectT AddUpgrade<ProjectT>(this ProjectT project, Guid? upgradeCode=null, params UpgradeVersion[] upgradeVersions) where ProjectT : Project
         {
-            upgradeCode = upgradeCode ?? project.UpgradeCode ?? project.SetIdentifiers(noThrow: noThrow, assembly: assembly).UpgradeCode;
+            upgradeCode = upgradeCode ?? project.UpgradeCode ?? throw new ArgumentException("Upgrade Code is not defined");
 
             StringBuilder xml = new StringBuilder();
-
             xml.Append($"<Upgrade Id=\"{upgradeCode}\">");
             foreach (var upgradeVersion in upgradeVersions)
                 xml.Append(upgradeVersion.ToXml());
             xml.Append("</Upgrade>");
-
             project.AddXml(elementPlacement, xml.ToString());
+
             return project;
         }
 
