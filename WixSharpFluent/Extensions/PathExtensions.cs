@@ -34,17 +34,20 @@ namespace WixSharp.Fluent.Extensions
         /// Separates single path to its components
         /// </summary>
         /// <param name="path"></param>
-        /// <returns></returns>
+        /// <returns>Path split into pieces, prefixed with '\' if path is UNC</returns>
         public static string[] PathToPathPieces(this string path)
         {
-            return path.PathSplitCleanup('\\').ToArray();
+            path = path.Trim().Replace('/', '\\');
+            var unc = path.StartsWith("\\\\");
+            var pieces = path.PathSplitCleanup('\\').ToArray();
+            return unc ? new string[] { "\\" }.Combine(pieces) : pieces;
         }
 
         /// <summary>
         /// Separates multiple paths to their components
         /// </summary>
         /// <param name="paths"></param>
-        /// <returns></returns>
+        /// <returns>Paths split into pieces, prefixed with '\' if path is UNC</returns>
         public static string[][] PathsToPathPieces(this string paths)
         {
             return paths.PathSplitCleanup(';').Select(path => path.PathToPathPieces()).ToArray();
@@ -54,7 +57,7 @@ namespace WixSharp.Fluent.Extensions
         /// Separates multiple paths to an array of paths
         /// </summary>
         /// <param name="paths"></param>
-        /// <returns></returns>
+        /// <returns>Path split into pieces, prefixed with "\\" if path is UNC</returns>
         public static string[] PathsToPathArray(this string paths)
         {
             return paths.PathsToPathPieces().Select(path=>path.JoinBy("\\")).ToArray();
