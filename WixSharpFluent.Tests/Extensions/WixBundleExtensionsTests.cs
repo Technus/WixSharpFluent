@@ -89,7 +89,7 @@ namespace WixSharp.Fluent.Extensions.Tests
             var project = new Project().SetDefaults(noThrow: false, assembly: testAssembly);
 
             expected.OutDir = project.OutDir;
-            expected.OutFileName = project.OutFileName+" Setup";
+            expected.OutFileName = project.OutFileName;
             expected.WixExtensions.AddRange(project.WixExtensions);
             expected.IconFile = project.GetIconPath();
             expected.Manufacturer = project.ControlPanelInfo.Manufacturer;

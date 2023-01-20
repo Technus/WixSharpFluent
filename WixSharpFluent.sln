@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33110.190
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WixSharpFluent.Tests", "WixSharpFluent.Tests\WixSharpFluent.Tests.csproj", "{922355D1-BAF2-474F-84B5-E25A48B1F53A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WixSharpFluent.Tests", "WixSharpFluent.Tests\WixSharpFluent.Tests.csproj", "{922355D1-BAF2-474F-84B5-E25A48B1F53A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WixSharpFluent", "WixSharpFluent\WixSharpFluent.csproj", "{58FC668A-7DAF-41BF-A7BA-22D762D19DC7}"
 EndProject

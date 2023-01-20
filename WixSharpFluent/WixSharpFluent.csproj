@@ -21,7 +21,7 @@ MSBuild parameter passing via additional Assembly Attributes, for installer proj
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<RepositoryUrl>https://github.com/Technus/WixSharpFluent</RepositoryUrl>
 		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-		<VersionPrefix>1.1.4</VersionPrefix>
+		<VersionPrefix>1.2.0</VersionPrefix>
 	</PropertyGroup>
 	
 	<ItemGroup>

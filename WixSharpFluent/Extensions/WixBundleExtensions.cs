@@ -21,7 +21,6 @@ namespace WixSharp.Fluent.Extensions
         /// </summary>
         public static readonly string InstallationFolderVar = "InstallFolder";
         internal static readonly string elementPlacement = "Wix/Bundle";
-        private static readonly string executableNameSuffix = " Setup";
 
         /// <summary>
         /// Calls:
@@ -56,7 +55,7 @@ namespace WixSharp.Fluent.Extensions
             bundle.SetVersion(project.Version.ToString(), noThrow: noThrow, assembly: assembly);
             bundle.SetManufacturer(project.ControlPanelInfo.Manufacturer, noThrow: noThrow, assembly: assembly);
             bundle.SetName(project.Name, noThrow: noThrow, assembly: assembly);
-            bundle.SetOutFileName(project.OutFileName == null ? null : project.OutFileName + executableNameSuffix, noThrow: noThrow, assembly: assembly);
+            bundle.SetOutFileName(project.OutFileName, noThrow: noThrow, assembly: assembly);
             bundle.SetIconPath(project.GetIconPath(), noThrow: noThrow, assembly: assembly);
             bundle.SetPreserveTempFiles(project.PreserveTempFiles, noThrow: noThrow, assembly: assembly);
             bundle.WixExtensions.AddRange(project.WixExtensions);
