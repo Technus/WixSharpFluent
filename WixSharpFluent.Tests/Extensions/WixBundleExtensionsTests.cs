@@ -36,7 +36,7 @@ namespace WixSharp.Fluent.Extensions.Tests
         {
             expected.OutFileName = testAssembly.GetCustomAttribute<AssemblyProductAttribute>().Product;
             expected.Name = testAssembly.GetCustomAttribute<AssemblyInsideInstallerNameAttribute>().ProductNameFull;
-            expected.OutDir = "wix";
+            expected.OutDir = "bin";
             expected.Include(WixExtension.Bal);
             expected.Include(WixExtension.Util);
             expected.Include(WixExtension.Fire);

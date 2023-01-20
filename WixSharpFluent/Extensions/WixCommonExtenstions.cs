@@ -21,7 +21,7 @@ namespace WixSharp.Fluent.Extensions
         /// <see cref="AutoGenerationOptions.InstallDirDefaultId"/>
         /// </summary>
         public static readonly string InstallationFolderId = "INSTALLFOLDER";
-        internal static string wixOutputFolder = "wix";
+        internal static string wixOutputFolder = "bin";
 
         static WixCommonExtensions()
         {
