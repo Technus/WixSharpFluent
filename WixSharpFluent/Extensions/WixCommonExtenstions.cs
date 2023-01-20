@@ -190,5 +190,16 @@ namespace WixSharp.Fluent.Extensions
             return project;
         }
 
+        /// <summary>
+        /// Suppresses Validation of the project
+        /// </summary>
+        /// <typeparam name="WixProjectT"></typeparam>
+        /// <param name="project"></param>
+        /// <returns></returns>
+        public static WixProjectT SuppressValidation<WixProjectT>(this WixProjectT project) where WixProjectT : WixProject
+        {
+            project.LightOptions = "-sval";
+            return project;
+        }
     }
 }
