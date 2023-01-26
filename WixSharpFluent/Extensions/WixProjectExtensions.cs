@@ -157,15 +157,10 @@ namespace WixSharp.Fluent.Extensions
         /// <returns></returns>
         public static ProjectT SetIconPath<ProjectT>(this ProjectT project, string iconPath=null, bool noThrow = false, DLL assembly=null) where ProjectT : Project
         {
-            iconPath = iconPath ?? GetAssemblyAttribute<AssemblyIconPathAttribute>(noThrow,assembly)?.Path;
-            if(iconPath != null)
-            {
-                var prop = project.Properties.FirstOrDefault(p=> iconPropName.Equals(p.Name));
-                if(prop is null)
-                    project.Properties = project.Properties.Combine(new Property(iconPropName, iconPath));
-                else
-                    prop.Value = iconPath;
-            }
+            project.ControlPanelInfo.ProductIcon = 
+                iconPath ?? 
+                GetAssemblyAttribute<AssemblyIconPathAttribute>(noThrow,assembly)?.Path ?? 
+                project.ControlPanelInfo.ProductIcon;
             return project;
         }
 
@@ -177,10 +172,7 @@ namespace WixSharp.Fluent.Extensions
         /// <returns></returns>
         public static string GetIconPath<ProjectT>(this ProjectT project) where ProjectT : Project
         {
-            foreach (var prop in project.Properties)
-                if (string.Equals(prop.Name, iconPropName))
-                    return prop.Value;
-            return null;
+            return project.ControlPanelInfo.ProductIcon;
         }
 
         /// <summary>

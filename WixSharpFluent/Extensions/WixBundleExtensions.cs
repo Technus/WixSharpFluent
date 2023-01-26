@@ -35,6 +35,7 @@ namespace WixSharp.Fluent.Extensions
         {
             bundle.SetWixDefaults(noThrow: noThrow, assembly: assembly);
             bundle.SetIdentifiers(noThrow: noThrow, assembly: assembly);
+            bundle.SetIconPath(noThrow: noThrow, assembly: assembly);
             bundle.SetApplication(noThrow: noThrow, assembly: assembly);
             bundle.AddInstallFolderVariable(noThrow: noThrow, assembly: assembly);
             return bundle;

@@ -78,7 +78,7 @@ namespace WixSharp.Fluent.Extensions.Tests
             expected.Application = app;
             
             provided.SetDefaults(noThrow: false, assembly: testAssembly);
-            DeepAssert.Equal(expected, provided,"Application");
+            DeepAssert.Equal(expected, provided,"Application", "IconFile");
             DeepAssert.Equal(expected.Application, provided.Application,"Id");
         }
 

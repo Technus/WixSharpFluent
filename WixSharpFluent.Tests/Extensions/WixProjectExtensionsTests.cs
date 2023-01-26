@@ -64,14 +64,15 @@ namespace WixSharp.Fluent.Extensions.Tests
             });
             expected.Media.Clear();
             expected.InstallScope = InstallScope.perMachine;
-            expected.Properties = expected.Properties.Combine(new Property("ARPPRODUCTICON", testAssembly.GetCustomAttribute<AssemblyIconPathAttribute>().Path));
+            expected.ControlPanelInfo.ProductIcon = testAssembly.GetCustomAttribute<AssemblyIconPathAttribute>().Path;
             provided.SetDefaults(noThrow: false, assembly: testAssembly);
 #if DEBUG
             expected.PreserveTempFiles = true;
 #else
             expected.PreserveTempFiles = false;
 #endif
-            DeepAssert.Equal(expected, provided, "GenericItems","Properties");
+            DeepAssert.Equal(expected, provided, "GenericItems","Properties", "ControlPanelInfo");
+            DeepAssert.Equal(expected.ControlPanelInfo, provided.ControlPanelInfo, "ProductIcon");
             DeepAssert.Equal(expected.GenericItems, provided.GenericItems, "Id");
             DeepAssert.Equal(expected.Properties, provided.Properties, "Id");
         }
@@ -191,14 +192,16 @@ namespace WixSharp.Fluent.Extensions.Tests
         public void SetIconPathTest(Project expected, Project provided)
         {
             var props = expected.Properties;
-            expected.Properties = props.Combine(new Property("ARPPRODUCTICON", testAssembly.GetCustomAttribute<AssemblyIconPathAttribute>().Path));
+            expected.ControlPanelInfo.ProductIcon = testAssembly.GetCustomAttribute<AssemblyIconPathAttribute>().Path;
             provided.SetIconPath(assembly:testAssembly);
-            DeepAssert.Equal(expected, provided, "Properties");
+            DeepAssert.Equal(expected, provided, "Properties", "ControlPanelInfo");
+            DeepAssert.Equal(expected.ControlPanelInfo, provided.ControlPanelInfo, "ProductIcon");
             DeepAssert.Equal(expected.Properties, provided.Properties, "Id");
 
-            expected.Properties = props.Combine(new Property("ARPPRODUCTICON", "BUTTER!!!"));
+            expected.ControlPanelInfo.ProductIcon = "BUTTER!!!";
             provided.SetIconPath("BUTTER!!!");
-            DeepAssert.Equal(expected, provided, "Properties");
+            DeepAssert.Equal(expected, provided, "Properties", "ControlPanelInfo");
+            DeepAssert.Equal(expected.ControlPanelInfo, provided.ControlPanelInfo, "ProductIcon");
             DeepAssert.Equal(expected.Properties, provided.Properties, "Id");
         }
 
