@@ -11,10 +11,13 @@ namespace WixSharp.Fluent.Redistributables
     {
         private const string redistFolder = "redist";
 
-        private static bool HashEquals(Stream fileData, RemotePayload payload)
+        private static bool HashEquals(Stream fileData, RemotePayload payload, bool noThrow)
         {
             var hash = BitConverter.ToString(SHA1.Create().ComputeHash(fileData)).Replace("-", "");
-            return string.Equals(hash, payload.Hash, StringComparison.InvariantCultureIgnoreCase);
+            var hashOk = string.Equals(hash, payload.Hash, StringComparison.InvariantCultureIgnoreCase);
+            if (!noThrow && !hashOk)
+                throw new Exception($"Hash invalid, computed: {hash}, required: {payload.Hash}");
+            return hashOk;
         }
 
         private static string GetFileNameFromLink(this string link)
@@ -29,14 +32,14 @@ namespace WixSharp.Fluent.Redistributables
             }
         }
 
-        private static string HandleRemotePayloadDownload(RemotePayload payload, string filename, string link)
+        private static string HandleRemotePayloadDownload(RemotePayload payload, string fileName, string link)
         {
-            System.IO.Directory.CreateDirectory(System.IO.Path.Combine(DownloadsFolder.DownloadsPath, redistFolder));
-            var downloadedFilePath = System.IO.Path.Combine(DownloadsFolder.DownloadsPath, redistFolder, filename);
+            Directory.CreateDirectory(Path.Combine(DownloadsFolder.DownloadsPath, redistFolder));
+            var downloadedFilePath = Path.Combine(DownloadsFolder.DownloadsPath, redistFolder, fileName);
 
             if (System.IO.File.Exists(downloadedFilePath))
                 using (var fileData = System.IO.File.OpenRead(downloadedFilePath))
-                    if (HashEquals(fileData, payload))
+                    if (HashEquals(fileData, payload, noThrow: true))
                         return downloadedFilePath;
                     else System.IO.File.Delete(downloadedFilePath);
 
@@ -50,39 +53,72 @@ namespace WixSharp.Fluent.Redistributables
                 response.GetResponseStream().CopyTo(memory);
 
                 memory.Seek(0, SeekOrigin.Begin);
-                if (HashEquals(memory, payload))
+
+                try
+                {
+                    HashEquals(memory, payload, noThrow: false);
+                }
+                catch(Exception ex)
+                {
+                    throw new Exception($"Hash Invalid, or download failed: {downloadedFilePath}", ex);
+                }
+
+                try
+                {
                     using (var file = System.IO.File.OpenWrite(downloadedFilePath))
                     {
                         memory.Seek(0, SeekOrigin.Begin);
                         memory.CopyTo(file);
                     }
-                else throw new Exception($"{filename} Hash Invalid");
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"Failed to write: {downloadedFilePath}", ex);
+                }
             }
 
             return downloadedFilePath;
         }
 
-        internal static ExePackage HandleRedistributable(this ExePackage package, RemotePayload payload, string file, string link)
+        private static string HandleLocalPayload(RemotePayload payload, string filePath)
+        {
+            if (System.IO.File.Exists(filePath))
+            {
+                using (var fileData = System.IO.File.OpenRead(filePath))
+                {
+                    try
+                    {
+                        HashEquals(fileData, payload, noThrow: false);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception($"Hash Invalid: {filePath}", ex);
+                    }
+                }
+            }
+            else throw new Exception($"File does not exist: {filePath}");
+
+            return filePath;
+        }
+
+        internal static PackageT HandleRedistributable<PackageT>(this PackageT package, RemotePayload payload, string file, string link) where PackageT : ExePackage
         {
             if (string.IsNullOrWhiteSpace(link) && string.IsNullOrWhiteSpace(file))
                 throw new ArgumentException("Both file and link cannot be invalid");
 
-            string name = string.IsNullOrWhiteSpace(file) ? link.GetFileNameFromLink() : Path.GetFileName(file);
+            string name = string.IsNullOrWhiteSpace(file) ? link.GetFileNameFromLink() : file.PathGetFileName();
+            if(string.IsNullOrWhiteSpace(name))
+                throw new ArgumentException("Both file and link cannot be resolved to file name");
 
             package.Compressed = package.Compressed ?? true;
+            package.Name = string.IsNullOrWhiteSpace(package.Name) ? $@"{redistFolder}\{name}" : package.Name;
+            if (string.IsNullOrWhiteSpace(package.Name))
+                throw new Exception("Cannot resolve package name");
+
             if (package.Compressed ?? true)
-            {
-                if (string.IsNullOrWhiteSpace(link))
-                {
-                    package.SourceFile = file;
-                    package.Name = file;
-                }
-                else
-                {
-                    package.SourceFile = HandleRemotePayloadDownload(payload, file, link);
-                    package.Name = $@"{redistFolder}\{name}";
-                }
-            }
+                package.SourceFile = string.IsNullOrWhiteSpace(link) 
+                    ? HandleLocalPayload(payload, file) 
+                    : HandleRemotePayloadDownload(payload, file, link);
             else
             {
                 if (string.IsNullOrWhiteSpace(link))
@@ -90,9 +126,7 @@ namespace WixSharp.Fluent.Redistributables
 
                 package.RemotePayloads = new RemotePayload[] { payload };
                 package.DownloadUrl = link;
-                package.Name = $@"{redistFolder}\{name}";
             }
-
             return package;
         }
     }
