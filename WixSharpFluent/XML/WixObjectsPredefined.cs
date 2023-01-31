@@ -18,12 +18,12 @@ namespace WixSharp.Fluent
         /// 
         /// </summary>
         /// <param name="payload">The File Payload meta-data</param>
-        /// <param name="filename">The downloaded File Name</param>
+        /// <param name="file">The downloaded File Name</param>
         /// <param name="link">Payload download link taken from: https://dotnet.microsoft.com/en-us/download/dotnet-framework/net48</param>
         /// <param name="compressed">Whether the package payload should be embedded in a container or left as an external payload</param>
         /// <param name="id">Unique name for payload usually: NetFxWeb48 or NetFxFull48</param>
         /// <returns></returns>
-        internal static ExePackage CreateNetFxPackage(this RemotePayload payload, string link, string id = null, string filename = null, bool? compressed = null)
+        internal static ExePackage CreateNetFxPackage(this RemotePayload payload, string link = null, string id = null, string file = null, bool? compressed = null)
         {
             if (string.IsNullOrWhiteSpace(id))
                 id = "NetFx";
@@ -39,12 +39,12 @@ namespace WixSharp.Fluent
                 InstallCommand = $"/q /norestart /ChainingPackage \"[WixBundleName]\"",
                 RepairCommand = $"/repair /q /norestart /ChainingPackage \"[WixBundleName]\"",
                 UninstallCommand = $"/uninstall /q /norestart /ChainingPackage \"[WixBundleName]\"",
-            }.HandlePayload(payload, filename, link);
+            }.HandleRedistributable(payload, file, link);
 
             return package;
         }
 
-        internal static ExePackage CreateVCppPackage(this RemotePayload payload, string link, string id = null, string filename = null, bool? compressed = null)
+        internal static ExePackage CreateVCppPackage(this RemotePayload payload, string link = null, string id = null, string file = null, bool? compressed = null)
         {
             if (string.IsNullOrWhiteSpace(id))
                 id = "VCpp";
@@ -60,7 +60,7 @@ namespace WixSharp.Fluent
                 InstallCommand = $"/q /norestart /ChainingPackage \"[WixBundleName]\"",
                 RepairCommand = $"/repair /q /norestart /ChainingPackage \"[WixBundleName]\"",
                 UninstallCommand = $"/uninstall /q /norestart /ChainingPackage \"[WixBundleName]\"",
-            }.HandlePayload(payload, filename, link);
+            }.HandleRedistributable(payload, file, link);
 
             return package;
         }

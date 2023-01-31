@@ -130,23 +130,20 @@ namespace WixSharp.Fluent.Extensions
         }
 
         /// <summary>
-        /// 
+        /// Adds external dependency for .NET runtime
         /// </summary>
-        /// <param name="bundle"></param>
-        /// <param name="link">if HTTPS is not working change to HTTP</param>
-        /// <param name="payload"></param>
+        /// <param name="bundle">the bootstrapper</param>
+        /// <param name="payload">file metadata (does not imply that the file will always be a remote payload)</param>
+        /// <param name="link">if HTTPS is not working change to HTTP or null/empty when using local file</param>
         /// <param name="detect">Only detects if 'major.minor' version is installed, not detecting will force install</param>
-        /// <param name="id"></param>
-        /// <param name="filename"></param>
-        /// <param name="compressed"></param>
+        /// <param name="id">desired id</param>
+        /// <param name="file">path when link is unspecified, else filename or null</param>
+        /// <param name="compressed">should bundle the file with installer</param>
         /// <returns></returns>
-        public static BundleT AddNetFx<BundleT>(this BundleT bundle, string link, RemotePayload payload, bool detect = true, string id = null, string filename = null, bool? compressed = null) where BundleT : Bundle
+        public static BundleT AddNetFx<BundleT>(this BundleT bundle, RemotePayload payload, string link = null, bool detect = true, string id = null, string file = null, bool? compressed = null) where BundleT : Bundle
         {
-            //Only relevant for Managed Bootstrapper Applications which this is most likely not
-            //bundle.WixVariables.Add("WixMbaPrereqPackageId", "???");
-            //bundle.WixVariables.Add("WixMbaPrereqLicenseUrl", "???");
             bundle.Include(WixExtension.NetFx);
-            var package = payload.CreateNetFxPackage(link, id, filename, compressed);
+            var package = payload.CreateNetFxPackage(link, id, file, compressed);
             bundle.Chain.Insert(0, package);
 
             if (detect)
@@ -217,20 +214,20 @@ namespace WixSharp.Fluent.Extensions
         }
 
         /// <summary>
-        /// 
+        /// Adds external dependency for VCpp runtime
         /// </summary>
         /// <typeparam name="BundleT"></typeparam>
-        /// <param name="bundle"></param>
-        /// <param name="link"></param>
-        /// <param name="payload"></param>
-        /// <param name="detect"></param>
-        /// <param name="id"></param>
-        /// <param name="filename"></param>
-        /// <param name="compressed"></param>
+        /// <param name="bundle">the bootstrapper</param>
+        /// <param name="payload">file metadata (does not imply that the file will always be a remote payload)</param>
+        /// <param name="link">if HTTPS is not working change to HTTP or null/empty when using local file</param>
+        /// <param name="detect">Only detects if 'major.minor' version is installed, not detecting will force install</param>
+        /// <param name="id">desired id</param>
+        /// <param name="file">path when link is unspecified, else filename or null</param>
+        /// <param name="compressed">should bundle the file with installer</param>
         /// <returns></returns>
-        public static BundleT AddVCpp<BundleT>(this BundleT bundle, string link, RemotePayload payload, bool detect = true, string id = null, string filename = null, bool? compressed = null) where BundleT : Bundle
+        public static BundleT AddVCpp<BundleT>(this BundleT bundle, RemotePayload payload, string link = null, bool detect = true, string id = null, string file = null, bool? compressed = null) where BundleT : Bundle
         {
-            var package = payload.CreateVCppPackage(link, id, filename, compressed);
+            var package = payload.CreateVCppPackage(link, id, file, compressed);
             bundle.Chain.Insert(0, package);
 
             if (detect)
@@ -268,7 +265,7 @@ namespace WixSharp.Fluent.Extensions
         /// <returns></returns>
         public static BundleT AddNetFxWeb48<BundleT>(this BundleT bundle, bool detect = true) where BundleT : Bundle
         {
-            return bundle.AddNetFx("https://go.microsoft.com/fwlink/?LinkId=2085155", new RemotePayload
+            return bundle.AddNetFx(new RemotePayload
             {
                 Hash = "4181398AA1FD5190155AC3A388434E5F7EA0B667",
                 Size = 1439328,
@@ -277,7 +274,7 @@ namespace WixSharp.Fluent.Extensions
                 ProductName = "Microsoft .NET Framework 4.8",
                 CertificatePublicKey = "F49F9B33E25E33CCA0BFB15A62B7C29FFAB3880B",
                 CertificateThumbprint = "ABDCA79AF9DD48A0EA702AD45260B3C03093FB4B",
-            }, detect);
+            }, "https://go.microsoft.com/fwlink/?LinkId=2085155", detect);
         }
 
         /// <summary>
@@ -288,7 +285,7 @@ namespace WixSharp.Fluent.Extensions
         /// <returns></returns>
         public static BundleT AddNetFxFull48<BundleT>(this BundleT bundle, bool detect = true) where BundleT : Bundle
         {
-            return bundle.AddNetFx("https://go.microsoft.com/fwlink/?linkid=2088631", new RemotePayload
+            return bundle.AddNetFx(new RemotePayload
             {
                 Hash = "E322E2E0FB4C86172C38A97DC6C71982134F0570",
                 Size = 121307088,
@@ -297,7 +294,7 @@ namespace WixSharp.Fluent.Extensions
                 ProductName = "Microsoft .NET Framework 4.8",
                 CertificatePublicKey = "F49F9B33E25E33CCA0BFB15A62B7C29FFAB3880B",
                 CertificateThumbprint = "ABDCA79AF9DD48A0EA702AD45260B3C03093FB4B",
-            }, detect);
+            }, "https://go.microsoft.com/fwlink/?linkid=2088631", detect);
         }
 
         /// <summary>
@@ -309,7 +306,7 @@ namespace WixSharp.Fluent.Extensions
         /// <returns></returns>
         public static BundleT AddVCpp12<BundleT>(this BundleT bundle, bool detect = true) where BundleT : Bundle
         {
-            return bundle.AddVCpp("http://download.visualstudio.microsoft.com/download/pr/10912113/5da66ddebb0ad32ebd4b922fd82e8e25/vcredist_x86.exe", new RemotePayload
+            return bundle.AddVCpp(new RemotePayload
             {
                 Hash = "0F5D66BCAF120F2D3F340E448A268FE4BBF7709D",
                 Size = 6510136,
@@ -318,7 +315,7 @@ namespace WixSharp.Fluent.Extensions
                 ProductName = "Microsoft Visual C++ 2013 Redistributable (x86) - 12.0.40664",
                 CertificatePublicKey = "371DD003A37769487A2A89A5A9DDB3026451B906",
                 CertificateThumbprint = "98ED99A67886D020C564923B7DF25E9AC019DF26",
-            }, detect);
+            }, "http://download.visualstudio.microsoft.com/download/pr/10912113/5da66ddebb0ad32ebd4b922fd82e8e25/vcredist_x86.exe", detect);
         }
 
         /// <summary>

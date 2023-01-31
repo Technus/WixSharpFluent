@@ -62,20 +62,37 @@ namespace WixSharp.Fluent.Redistributables
             return downloadedFilePath;
         }
 
-        internal static ExePackage HandlePayload(this ExePackage package, RemotePayload payload, string filename, string link)
+        internal static ExePackage HandleRedistributable(this ExePackage package, RemotePayload payload, string file, string link)
         {
-            if (string.IsNullOrWhiteSpace(filename))
-                filename = link.GetFileNameFromLink();
+            if (string.IsNullOrWhiteSpace(link) && string.IsNullOrWhiteSpace(file))
+                throw new ArgumentException("Both file and link cannot be invalid");
 
-            if (package.Compressed == false)
+            string name = string.IsNullOrWhiteSpace(file) ? link.GetFileNameFromLink() : Path.GetFileName(file);
+
+            package.Compressed = package.Compressed ?? true;
+            if (package.Compressed ?? true)
             {
-                package.RemotePayloads = new RemotePayload[] { payload };
-                package.DownloadUrl = link;
+                if (string.IsNullOrWhiteSpace(link))
+                {
+                    package.SourceFile = file;
+                    package.Name = file;
+                }
+                else
+                {
+                    package.SourceFile = HandleRemotePayloadDownload(payload, file, link);
+                    package.Name = $@"{redistFolder}\{name}";
+                }
             }
             else
-                package.SourceFile = HandleRemotePayloadDownload(payload, filename, link);
+            {
+                if (string.IsNullOrWhiteSpace(link))
+                    throw new ArgumentException("When not including the file, the link must be set", nameof(link));
 
-            package.Name = $@"{redistFolder}\{filename}";
+                package.RemotePayloads = new RemotePayload[] { payload };
+                package.DownloadUrl = link;
+                package.Name = $@"{redistFolder}\{name}";
+            }
+
             return package;
         }
     }
