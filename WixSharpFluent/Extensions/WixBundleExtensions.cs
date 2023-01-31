@@ -140,7 +140,7 @@ namespace WixSharp.Fluent.Extensions
         /// <param name="filename"></param>
         /// <param name="compressed"></param>
         /// <returns></returns>
-        private static BundleT AddNetFx<BundleT>(this BundleT bundle, string link, RemotePayload payload, bool detect = true, string id = null, string filename = null, bool? compressed = null) where BundleT : Bundle
+        public static BundleT AddNetFx<BundleT>(this BundleT bundle, string link, RemotePayload payload, bool detect = true, string id = null, string filename = null, bool? compressed = null) where BundleT : Bundle
         {
             //Only relevant for Managed Bootstrapper Applications which this is most likely not
             //bundle.WixVariables.Add("WixMbaPrereqPackageId", "???");
@@ -228,7 +228,7 @@ namespace WixSharp.Fluent.Extensions
         /// <param name="filename"></param>
         /// <param name="compressed"></param>
         /// <returns></returns>
-        private static BundleT AddVCpp<BundleT>(this BundleT bundle, string link, RemotePayload payload, bool detect = true, string id = null, string filename = null, bool? compressed = null) where BundleT : Bundle
+        public static BundleT AddVCpp<BundleT>(this BundleT bundle, string link, RemotePayload payload, bool detect = true, string id = null, string filename = null, bool? compressed = null) where BundleT : Bundle
         {
             var package = payload.CreateVCppPackage(link, id, filename, compressed);
             bundle.Chain.Insert(0, package);

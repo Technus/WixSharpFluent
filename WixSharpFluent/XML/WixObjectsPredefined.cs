@@ -39,7 +39,7 @@ namespace WixSharp.Fluent
                 InstallCommand = $"/q /norestart /ChainingPackage \"[WixBundleName]\"",
                 RepairCommand = $"/repair /q /norestart /ChainingPackage \"[WixBundleName]\"",
                 UninstallCommand = $"/uninstall /q /norestart /ChainingPackage \"[WixBundleName]\"",
-            }.HandlePayload(payload, filename, link); ;
+            }.HandlePayload(payload, filename, link);
 
             return package;
         }
