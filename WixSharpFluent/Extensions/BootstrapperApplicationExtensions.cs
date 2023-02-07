@@ -1,4 +1,6 @@
-﻿using WixSharp.Bootstrapper;
+﻿using System;
+using WixSharp.Bootstrapper;
+using WixSharp.Fluent.XML;
 
 namespace WixSharp.Fluent.Extensions
 {
@@ -7,6 +9,17 @@ namespace WixSharp.Fluent.Extensions
     /// </summary>
     public static class BootstrapperApplicationExtensions
     {
+        /// <summary>
+        /// Wix Extension: Bal Extended
+        /// </summary>
+        public static WixExtension BalExt = new WixExtension(AppDomain.CurrentDomain.BaseDirectory.PathCombine("WixBalExtensionExt.dll"), "bal", "http://schemas.microsoft.com/wix/BalExtension");
+
+        /// <summary>
+        /// Holder for the Simple Bal extension
+        /// </summary>
+        public static WixExtension Bal = WixExtension.Bal;
+
+
         /// <summary>
         /// Sets OptionsUI and Repair to be enabled.
         /// Sets Version and FilresInUse to be enabled

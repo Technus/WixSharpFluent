@@ -90,7 +90,8 @@ namespace WixSharp.Fluent.Extensions.Tests
 
             expected.OutDir = project.OutDir;
             expected.OutFileName = project.OutFileName;
-            expected.WixExtensions.AddRange(project.WixExtensions);
+            expected.WixExtensions.AddRange(project.WixExtensions.Where(ex => !expected.WixExtensions.Contains(ex)));
+            expected.WixNamespaces.AddRange(project.WixNamespaces.Where(ns => !expected.WixNamespaces.Contains(ns)));
             expected.IconFile = project.GetIconPath();
             expected.Manufacturer = project.ControlPanelInfo.Manufacturer;
             expected.Version = project.Version;

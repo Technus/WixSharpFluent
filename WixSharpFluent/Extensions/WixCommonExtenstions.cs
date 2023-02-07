@@ -201,5 +201,40 @@ namespace WixSharp.Fluent.Extensions
             project.LightOptions = "-sval";
             return project;
         }
+
+        /// <summary>
+        /// Exclude an extension from project, but it might get readded later...
+        /// </summary>
+        /// <typeparam name="ProjectT"></typeparam>
+        /// <param name="project"></param>
+        /// <param name="extension"></param>
+        /// <returns></returns>
+        public static ProjectT Exclude<ProjectT>(this ProjectT project, WixExtension extension) where ProjectT : WixProject
+        {
+            project.ExcludeWixExtension(extension.Assembly, extension.XmlNamespacePrefix, extension.XmlNamespace);
+            return project;
+        }
+
+        /// <summary>
+        /// Exclude an extension from project, but it might get readded later...
+        /// </summary>
+        /// <typeparam name="ProjectT"></typeparam>
+        /// <param name="project">The project.</param>
+        /// <param name="extensionAssembly">The extension assembly.</param>
+        /// <param name="namespacePrefix">The namespace prefix.</param>
+        /// <param name="namespace">The namespace.</param>
+        /// <returns></returns>
+        public static ProjectT ExcludeWixExtension<ProjectT>(this ProjectT project, string extensionAssembly, string namespacePrefix, string @namespace) where ProjectT : WixProject
+        {
+            project.WixExtensions.RemoveAll(e => e == extensionAssembly);
+
+            if (namespacePrefix.IsNotEmpty())
+            {
+                string namespaceDeclaration = WixExtension.GetNamespaceDeclaration(namespacePrefix, @namespace);
+                project.WixNamespaces.RemoveAll(e => e == namespaceDeclaration);
+            }
+
+            return project;
+        }
     }
 }

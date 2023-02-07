@@ -7,6 +7,8 @@ using WixSharp.Fluent.Attributes;
 using static WixSharp.Fluent.Extensions.AssemblyAttributeExtensions;
 using WixSharp.CommonTasks;
 using System.Xml.Linq;
+using WixSharp.Fluent.XML;
+using System.Collections.Generic;
 
 namespace WixSharp.Fluent.Extensions
 {
@@ -59,7 +61,10 @@ namespace WixSharp.Fluent.Extensions
             bundle.SetOutFileName(project.OutFileName, noThrow: noThrow, assembly: assembly);
             bundle.SetIconPath(project.GetIconPath(), noThrow: noThrow, assembly: assembly);
             bundle.SetPreserveTempFiles(project.PreserveTempFiles, noThrow: noThrow, assembly: assembly);
-            bundle.WixExtensions.AddRange(project.WixExtensions);
+
+            bundle.WixExtensions.AddRange(project.WixExtensions.Where(ex => !bundle.WixExtensions.Contains(ex)));
+            bundle.WixNamespaces.AddRange(project.WixNamespaces.Where(ns => !bundle.WixNamespaces.Contains(ns)));
+
             bundle.OutDir = project.OutDir;
             bundle.SourceBaseDir = project.SourceBaseDir;
             bundle.CustomIdAlgorithm = project.CustomIdAlgorithm;
@@ -126,6 +131,12 @@ namespace WixSharp.Fluent.Extensions
                 bootstrapper ??
                 GetAssemblyAttribute<AssemblyBootstrapperAttribute>(noThrow, assembly)?.Bootstrapper ??
                 bundle.Application;
+
+            if (bootstrapper is HyperlinkLicenseBootstraperApplicationExtended)
+                bundle.SetExtendedBootstrapper();
+            else
+                bundle.SetSimpleBootstrapper();
+
             return bundle;
         }
 
@@ -449,6 +460,40 @@ namespace WixSharp.Fluent.Extensions
         public static BundleT AddVariable<BundleT>(this BundleT bundle, Variable variable) where BundleT : Bundle
         {
             bundle.Variables = bundle.Variables.Combine(variable).ToArray();
+            return bundle;
+        }
+
+        /// <summary>
+        /// Set the Bootstrapper type and change the internal Bal variable to prevent issues...
+        /// </summary>
+        /// <typeparam name="BundleT"></typeparam>
+        /// <param name="bundle"></param>
+        /// <returns></returns>
+        public static BundleT SetExtendedBootstrapper<BundleT>(this BundleT bundle) where BundleT : Bundle
+        {
+            if (WixExtension.Bal != BootstrapperApplicationExtensions.BalExt)
+            {
+                bundle.Exclude(WixExtension.Bal);
+                WixExtension.Bal = BootstrapperApplicationExtensions.BalExt;
+                bundle.Include(WixExtension.Bal);
+            }
+            return bundle;
+        }
+
+        /// <summary>
+        /// Set the Bootstrapper type and change the internal Bal variable to prevent issues...
+        /// </summary>
+        /// <typeparam name="BundleT"></typeparam>
+        /// <param name="bundle"></param>
+        /// <returns></returns>
+        public static BundleT SetSimpleBootstrapper<BundleT>(this BundleT bundle) where BundleT : Bundle
+        {
+            if (WixExtension.Bal != BootstrapperApplicationExtensions.Bal)
+            {
+                bundle.Exclude(WixExtension.Bal);
+                WixExtension.Bal = BootstrapperApplicationExtensions.Bal;
+                bundle.Include(WixExtension.Bal);
+            }
             return bundle;
         }
     }

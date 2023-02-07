@@ -1,31 +1,38 @@
-﻿using System.Linq;
+﻿using Microsoft.Tools.WindowsInstallerXml.Extensions;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Xml.Linq;
 using WixSharp.Bootstrapper;
+using WixSharp.Fluent.Extensions;
+using DLL = System.Reflection.Assembly;
 
 namespace WixSharp.Fluent.XML
 {
     /// <summary>
-    /// Fixes the issue where License is shown in the installer instead of just a hyperlink.
+    /// Uses the 'HyperlinkLicenseBootstraperApplication' and 'WixExtendedBootstrapperApplication'
     /// </summary>
-    public class HyperlinkLicenseBootstraperApplication : WixStandardBootstrapperApplication
+    public class HyperlinkLicenseBootstraperApplicationExtended : WixStandardBootstrapperApplication
     {
         /// <inheritdoc/>
         public override XContainer[] ToXml()
         {
-            XNamespace bal = Compiler.IsWix4 ?
+            XNamespace balExt = Compiler.IsWix4 ?
                                 "http://wixtoolset.org/schemas/v4/wxs/bal" :
                                 "http://schemas.microsoft.com/wix/BalExtension";
 
             var root = new XElement("BootstrapperApplicationRef");
 
-            var app = this.ToXElement(bal + "WixStandardBootstrapperApplication");
+            var app = this.ToXElement(balExt + "WixExtendedBootstrapperApplication");
 
             var payloads = Payloads.ToList();
 
             if (LogoSideFile.IsEmpty())
-                root.SetAttribute("Id", "WixStandardBootstrapperApplication.HyperlinkLicense");
+                root.SetAttribute("Id", "WixExtendedBootstrapperApplication.HyperlinkLicense");
             else
-                root.SetAttribute("Id", "WixStandardBootstrapperApplication.HyperlinkSidebarLicense");
+                root.SetAttribute("Id", "WixExtendedBootstrapperApplication.HyperlinkSidebarLicense");
 
             if (LicensePath.IsEmpty())
                 app.Add(new XAttribute("LicenseUrl", "")); //cannot use SetAttribute as we want to preserve empty attrs
