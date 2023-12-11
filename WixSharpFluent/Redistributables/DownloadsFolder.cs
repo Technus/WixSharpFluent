@@ -35,11 +35,11 @@ namespace WixSharp.Fluent.Redistributables
 #else
         static DownloadsFolder()
         {
-            DownloadsPath = Environment.ExpandEnvironmentVariables(@"%USERPROFILE%\.WixSharp.Fluent\Redistributables\Cache");
+            DownloadsPath = Path.Combine(Path.GetTempPath(), @".WixSharp.Fluent\Redistributables\Cache");
             Directory.CreateDirectory(DownloadsPath);
         }
 #endif
 
-        internal static string DownloadsPath { get; private set; }
+        internal static string DownloadsPath { get; }
     }
 }
