@@ -1,43 +1,65 @@
 ﻿using Microsoft.Deployment.WindowsInstaller;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace WixSharp.Fluent.Extensions
 {
-    /// <summary>
-    /// Helpers for features
-    /// </summary>
-    public static class FeatureExtensions
+  /// <summary>
+  /// Helpers for features
+  /// </summary>
+  public static class FeatureExtensions
     {
+        private static readonly Dictionary<Feature, string> _propertyMapping = new Dictionary<Feature, string>();
+
         /// <summary>
-        /// Computes the Property name from the Feature Name. Used when invoking <see cref="SetSmart{FeatureT}(FeatureT, string, string, int?)"/>
+        /// Computes the default property name for a given <see cref="Feature"/> <see cref="WixEntity.Id"/>
+        /// </summary>
+        /// <typeparam name="FeatureT"></typeparam>
+        /// <param name="feature"></param>
+        /// <returns></returns>
+        public static string GetDefaultPropertyName<FeatureT>(this FeatureT feature) where FeatureT : Feature
+        {
+            return $"FEATURE_{feature.Id.Replace(' ', '_').Replace('.', '_').ToUpperInvariant()}";
+        }
+
+        /// <summary>
+        /// Computes the Property name from the <see cref="Feature"/> <see cref="WixEntity.Id"/>
         /// </summary>
         /// <typeparam name="FeatureT"></typeparam>
         /// <param name="feature"></param>
         /// <returns></returns>
         public static string GetPropertyName<FeatureT>(this FeatureT feature) where FeatureT : Feature
         {
-            return $"FEATURE_{feature.Id.Replace(' ', '_').Replace('.', '_').ToUpperInvariant()}";
+            _propertyMapping.TryGetValue(feature, out var property);
+            return property ?? feature.GetDefaultPropertyName();
         }
 
         /// <summary>
-        /// Sets the Feature ID and Condition to check against the <see cref="GetPropertyName{FeatureT}(FeatureT)"/> and set the level to 2 when its equal 0
+        /// Sets the Property name from the <see cref="Feature"/> <see cref="WixEntity.Id"/>
+        /// </summary>
+        /// <typeparam name="FeatureT"></typeparam>
+        /// <param name="feature"></param>
+        /// <param name="propertyName">The property id to set on the feature</param>
+        /// <returns></returns>
+        public static FeatureT SetPropertyName<FeatureT>(this FeatureT feature, string propertyName = null) where FeatureT : Feature
+        {
+            _propertyMapping[feature] = propertyName ?? feature.GetDefaultPropertyName();
+            return feature;
+        }
+
+        /// <summary>
+        /// Sets the <see cref="Feature.Condition"/> to check against the <paramref name="propertyName"/> when its equal 0 set the level to 2 
         /// </summary>
         /// <typeparam name="FeatureT"></typeparam>
         /// <param name="feature">The feature needs unique name</param>
-        /// <param name="id">The id to set on the feature</param>
-        /// <param name="condition">What the property should be equal to</param>
-        /// <param name="targetLevel">To what Level set the feature on condition</param>
+        /// <param name="propertyName">The property id to set on the feature</param>
         /// <returns></returns>
-        public static FeatureT SetSmart<FeatureT>(this FeatureT feature, string id = null, string condition = null, int? targetLevel = null) where FeatureT : Feature
+        public static FeatureT SetSmart<FeatureT>(this FeatureT feature, string propertyName = null) where FeatureT : Feature
         {
-            condition = condition ?? $"{feature.GetPropertyName()} = 0";
-            feature.Condition = new FeatureCondition(Condition.Create(condition), targetLevel ?? 2);
+            if(propertyName == null)
+              propertyName = feature.GetPropertyName();
+            else
+              feature.SetPropertyName(propertyName);
+            feature.Condition = new FeatureCondition(Condition.Create($"{propertyName} = 0"), 2);
             return feature;
         }
 

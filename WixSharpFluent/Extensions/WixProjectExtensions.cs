@@ -16,7 +16,6 @@ namespace WixSharp.Fluent.Extensions
     public static class WixProjectExtensions
     {
         internal static readonly string elementPlacement = "Wix/Product";
-        private static readonly string iconPropName = "ARPPRODUCTICON";
         private static readonly string downgradeErrorMessage = "A newer version is already installed.";
 
         /// <summary>
@@ -324,19 +323,17 @@ namespace WixSharp.Fluent.Extensions
         }
 
         /// <summary>
-        /// Adds the smart Feature <see cref="FeatureExtensions.SetSmart{FeatureT}(FeatureT, string, string, int?)"/> mathing property
+        /// Adds the smart Feature <see cref="FeatureExtensions.SetSmart{FeatureT}(FeatureT, string)"/> matching property
         /// </summary>
         /// <typeparam name="ProjectT"></typeparam>
         /// <param name="project"></param>
         /// <param name="feature"></param>
-        /// <param name="propertyName"><see cref="FeatureExtensions.GetPropertyName{FeatureT}(FeatureT)"/> Generates default value</param>
         /// <param name="defaultValue">By default "1"</param>
         /// <returns></returns>
-        public static ProjectT AddSmartFeatureProperty<ProjectT>(this ProjectT project, Feature feature, string propertyName = null, string defaultValue=null) where ProjectT : Project
+        public static ProjectT AddSmartFeatureProperty<ProjectT>(this ProjectT project, Feature feature, string defaultValue=null) where ProjectT : Project
         {
-            propertyName = propertyName ?? feature.GetPropertyName();
             defaultValue = defaultValue ?? "1";
-            project.AddProperty(new Property(propertyName, defaultValue));
+            project.AddProperty(new Property(feature.GetPropertyName(), defaultValue));
             return project;
         }
     }

@@ -303,13 +303,13 @@ namespace WixSharp.Fluent.Extensions.Tests
 
             feature = new Feature("featurezz").SetSmart();
             expected.AddProperty(new Property(feature.GetPropertyName(), "LEET"));
-            provided.AddSmartFeatureProperty(feature,feature.GetPropertyName(), "LEET");
+            provided.AddSmartFeatureProperty(feature, "LEET");
             DeepAssert.Equal(expected, provided, "Properties");
             DeepAssert.Equal(expected.Properties, provided.Properties, "Id");
 
             feature = new Feature("featuress").SetSmart("KEK");
             expected.AddProperty(new Property("KEK", "LEET"));
-            provided.AddSmartFeatureProperty(feature, "KEK", "LEET");
+            provided.AddSmartFeatureProperty(feature, "LEET");
             DeepAssert.Equal(expected, provided, "Properties");
             DeepAssert.Equal(expected.Properties, provided.Properties, "Id");
         }

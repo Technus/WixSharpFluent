@@ -41,7 +41,7 @@ namespace WixSharp.Fluent.XML
         /// Rather than saving the matching directory path into the variable, 
         /// a DirectorySearch can save an attribute of the matching directory instead.
         /// This attribute's value must be one of the following:
-        //     exists - Saves true if a matching directory is found; false otherwise.
+        /// exists - Saves true if a matching directory is found; false otherwise.
         /// </summary>
         [Xml]
         public SearchResult? Result;

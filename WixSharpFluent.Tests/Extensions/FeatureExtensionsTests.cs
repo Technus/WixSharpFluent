@@ -50,9 +50,19 @@ namespace WixSharp.Fluent.Extensions.Tests
             Assert.Equal("(!Name20Addedd = 3 OR FEATURE_NAME20ADDEDD = 1)", feature.GetCondition());
 
             feature = new Feature("Name asd");
-            feature.SetSmart();
             Assert.Equal("Name20asd", feature.Id);
+            feature.SetSmart();
             Assert.Equal("(!Name20asd = 3 OR FEATURE_NAME20ASD = 1)", feature.GetCondition());
+
+            feature = new Feature("Name Addedd");
+            Assert.Equal("Name20Addedd.1", feature.Id);
+            feature.SetSmart("T1");
+            Assert.Equal("(!Name20Addedd.1 = 3 OR T1 = 1)", feature.GetCondition());
+
+            feature = new Feature("Name asd");
+            Assert.Equal("Name20asd.1", feature.Id);
+            feature.SetSmart("T2");
+            Assert.Equal("(!Name20asd.1 = 3 OR T2 = 1)", feature.GetCondition());
         }
 
         [Fact()]
